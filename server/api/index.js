@@ -4,15 +4,15 @@ const router = express.Router();
 const Petition = require("./petition");
 
 router.post("/petition", async (req, res) => {
-  const { number } = req.body;
+  const { number, type } = req.body;
   let petition = new Petition();
   let petitionData = {
     number: number,
-    type: "capacity",
-    courses: [{ name: "CMPS 272" }],
+    type: type ? type : "capacity",
+    courses: [{ name: "CMPS 299" }],
     accepted: false,
   };
-  console.log(number);
+  console.log(number, type);
 
   await petition.savePetitionDataToMongo(number, petitionData);
   res.header("Content-Type", "application/json");
