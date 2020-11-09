@@ -1,9 +1,10 @@
+const { response } = require("express");
 const PETITION = require("../../src/models/Petition");
 
 class Petition {
-  savePetitionDataToMongo = async (number, data) => {
+  savePetition = async (course, data) => {
     const filter = {
-      number: number,
+      course: course,
     };
 
     const replace = {
@@ -13,8 +14,16 @@ class Petition {
     await this.findOneReplace(filter, replace);
   };
 
-  getPetitionDataFromMongo = async (number) => {
-    return PETITION.findOne({ number: number });
+  getPetitions = async () => {
+    return PETITION.find({}, (err, petitions) => petitions);
+  };
+
+  updatePetitionById = async (id, course) => {
+    return PETITION.findByIdAndUpdate(id, { course: course });
+  };
+
+  removePetitionById = async (id) => {
+    return PETITION.findByIdAndRemove(id);
   };
 
   async findOneReplace(filter, replace) {

@@ -1,13 +1,7 @@
 const mongoose = require("mongoose");
 
 const PetitionSchema = new mongoose.Schema({
-  number: Number,
-  type: String,
-  courses: [
-    {
-      name: String,
-    },
-  ],
+  course: String,
   accepted: Boolean,
 });
 

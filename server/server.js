@@ -13,9 +13,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const apis = require("./api");
 app.use("/api", apis);
 
+app.use("/static", express.static("public"));
+
 mongoose
   .connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log(err));
+
+app.set("view engine", "ejs");
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

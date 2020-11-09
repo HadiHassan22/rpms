@@ -1,0 +1,105 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: #37474f;
+}
+.petition-container {
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 20px;
+  width: 600px;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.petition {
+  width: 400px;
+}
+.petition-container h2 {
+  padding: 10px;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 2em;
+}
+.petition-header input {
+  width: 92%;
+  border: none;
+  border-radius: 2px;
+  height: 20px;
+  font-family: "Segoe UI", sans-serif;
+}
+.petition-header button {
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 5px;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #c2185b;
+}
+.petition-container ul {
+  list-style: none;
+}
+.petition-list-item {
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  font-family: "Segoe UI", sans-serif;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: row;
+}
+.petition-list-item form {
+  width: 100%;
+  display: flex;
+}
+.petition-list-item input {
+  flex-grow: 2;
+  margin-right: 20px;
+  border: none;
+  border-radius: 5px;
+  font-family: "Segoe UI", sans-serif;
+}
+.petition-list-item button {
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #c2185b;
+}
+.petition-list-item .cancel {
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px;
+  font-family: "Segoe UI", sans-serif;
+  background-color: rgb(223, 43, 43);
+  margin-left: 5px;
+}
+.petition-list-item div {
+  flex-grow: 2;
+}
+.petition-list-item .edit {
+  color: rgb(143, 233, 58);
+  margin-right: 10px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.petition-list-item .remove {
+  color: rgb(243, 96, 96);
+  margin-right: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
