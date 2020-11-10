@@ -1,0 +1,1 @@
+{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"person":{"type":"object","properties":{"adult":{"type":"boolean"},"age":{"type":"integer"},"name":{"type":"string"}},"input":true}}}
