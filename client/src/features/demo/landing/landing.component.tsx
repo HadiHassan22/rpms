@@ -9,7 +9,6 @@ import {
 } from "@ant-design/icons";
 
 import { RootState } from "&store/store";
-import { useFirestoreConnect } from "react-redux-firebase";
 /**
  * These are actions imported from the feature slices.
  * You can use 'useDispatch' hook or 'mapDispatchToProps'
@@ -32,12 +31,6 @@ const LandingComponent = (props: ReduxProps) => {
   useEffect(() => {
     // Write your side-effects here
   }, []);
-
-  useFirestoreConnect([{ collection: "petitions" }]);
-
-  const petitions = useSelector(
-    (state: RootState) => state.firestore.ordered.petitions
-  );
 
   return (
     <Layout>
@@ -76,9 +69,7 @@ const LandingComponent = (props: ReduxProps) => {
           <div
             className="site-layout-background"
             style={{ padding: 24, minHeight: 360 }}
-          >
-            {petitions}
-          </div>
+          ></div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
           <a href="#/login">{"Go to student view"}</a>

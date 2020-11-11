@@ -6,46 +6,47 @@ This is a React.js template fully written in Typescript. The template is based o
 
 ## Commands
 
-|       command                |                    action                                  |
-| :-------------------------:  | :--------------------------------------------------------: |
-|     `yarn install`           |    Downloads project dependencies                          |
-|     `yarn start`             |    Runs the app in the development mode                    |
-|     `yarn test`              |    Launches the test runner in the interactive watch mode  |
-|     `yarn build`             |    Builds the app for production to the build folder       |
-|     `yarn serve`             |    Starts a static server to serve production build        |
-|     `yarn electron-dev`      |    Runs as desktop app in dev mode                         |
-|     `yarn electron-pack`     |    Builds desktop app package                              |
-|     `yarn cli:install`       |    Downloads the interactive cli dependencies              |
-|     `yarn cli:create`        |    Generate template file/s using the cli tool             |
+|       command        |                         action                         |
+| :------------------: | :----------------------------------------------------: |
+|    `yarn install`    |             Downloads project dependencies             |
+|     `yarn start`     |          Runs the app in the development mode          |
+|     `yarn test`      | Launches the test runner in the interactive watch mode |
+|     `yarn build`     |   Builds the app for production to the build folder    |
+|     `yarn serve`     |    Starts a static server to serve production build    |
+| `yarn electron-dev`  |            Runs as desktop app in dev mode             |
+| `yarn electron-pack` |               Builds desktop app package               |
+|  `yarn cli:install`  |       Downloads the interactive cli dependencies       |
+|  `yarn cli:create`   |      Generate template file/s using the cli tool       |
 
 ## To Use Template
 
-* Change the current working directory to your local project (optional).
-* Go to your project's root directory.
-* Run `git remote set-url origin <your new project url>` to link remote project (if applies).
-* Inside [`package.json`](package.json), modify the folowing project settings:
-    * Set `"name": <your new project name>`
-    * Set `"description": <your new project description>` 
-* Inside [`public/electron.js`](public/electron.js), set `title: <your project window title>`
-* Run `yarn install` to install the dependencies.
-* Run `yarn start` to start development server.
-* Run `yarn cli:install` to install cli dependencies.
-* Run `yarn cli:create` to generate feature files or styled components.
-* Edit generated files (read about generated files in the [here](####cli))
-* To generate production build files, run `yarn build`
+- Change the current working directory to your local project (optional).
+- Go to your project's root directory.
+- Run `git remote set-url origin <your new project url>` to link remote project (if applies).
+- Inside [`package.json`](package.json), modify the folowing project settings:
+  - Set `"name": <your new project name>`
+  - Set `"description": <your new project description>`
+- Inside [`public/electron.js`](public/electron.js), set `title: <your project window title>`
+- Run `yarn install` to install the dependencies.
+- Run `yarn start` to start development server.
+- Run `yarn cli:install` to install cli dependencies.
+- Run `yarn cli:create` to generate feature files or styled components.
+- Edit generated files (read about generated files in the [here](####cli))
+- To generate production build files, run `yarn build`
 
 ## Production
-* Web:
 
-    * run `yarn build` to perform production build. Build files will be generated in a new directory `/build`.
-    * run `yarn serve` to serve production build locally
+- Web:
 
-* Desktop:
-    Electron-packager supports packaging the React app for multiple desktop platforms (Windows, linux, MacOS). However, packaging for windows requires the extra step of downloading windows-build-tools. 
+  - run `yarn build` to perform production build. Build files will be generated in a new directory `/build`.
+  - run `yarn serve` to serve production build locally
 
-    * (Windows only): run the global command `npm --add-python-to-path='true' --debug install --global windows-build-tools` (or yarn equivalent) to install windows build tools (run as adminstrator)
-    * run `yarn electron-pack` to package as desktop app (This may take time depending on app size and hardware). Build files will be generated in a new directory `/dist`
-  
+- Desktop:
+  Electron-packager supports packaging the React app for multiple desktop platforms (Windows, linux, MacOS). However, packaging for windows requires the extra step of downloading windows-build-tools.
+
+  - (Windows only): run the global command `npm --add-python-to-path='true' --debug install --global windows-build-tools` (or yarn equivalent) to install windows build tools (run as adminstrator)
+  - run `yarn electron-pack` to package as desktop app (This may take time depending on app size and hardware). Build files will be generated in a new directory `/dist`
+
   Note: To test for desktop in dev-mode, just run `yarn electron-dev`.
 
 ## Structure
@@ -72,26 +73,27 @@ The project root directory structure is as follows:
   '        |-- utils',
   ''
 ```
-As mentioned before, following the "features" or "ducks" pattern organizes the folders in the following manner: 
 
-* [`/cli`](cli)         for the interactive cli that generates project template files.
-* [`/public`](public)         for public files
-* [`/readme`](readme)         for assets used in [`README.md`](README.md)
-* [`/src`](src)            for all source files
-* [`src/assets`](src/assets)      for assets (.png, .svg, etc ...)
-* [`src/config`](src/config)      for configuration files (colors, headers, strings, etc ...)
-* [`src/features`](src/features)    for project features (login, register, dashboard, settings ...)
-* [`src/locales`](src/locales)       for i18n localization files (en, ar ...)
-* [`src/roure`](src/route)       for router middlewares (protectedRoutes ...)
-* [`src/store`](src/store)       for redux configurations (combineReducers, middlewares, persist etc ...)
-* [`src/styled`](src/styled)      for multiple use stateless styled components 
-* [`src/utils`](src/utils)      for utils used throughout the project 
+As mentioned before, following the "features" or "ducks" pattern organizes the folders in the following manner:
+
+- [`/cli`](cli) for the interactive cli that generates project template files.
+- [`/public`](public) for public files
+- [`/readme`](readme) for assets used in [`README.md`](README.md)
+- [`/src`](src) for all source files
+- [`src/assets`](src/assets) for assets (.png, .svg, etc ...)
+- [`src/config`](src/config) for configuration files (colors, headers, strings, etc ...)
+- [`src/features`](src/features) for project features (login, register, dashboard, settings ...)
+- [`src/locales`](src/locales) for i18n localization files (en, ar ...)
+- [`src/roure`](src/route) for router middlewares (protectedRoutes ...)
+- [`src/store`](src/store) for redux configurations (combineReducers, middlewares, persist etc ...)
+- [`src/styled`](src/styled) for multiple use stateless styled components
+- [`src/utils`](src/utils) for utils used throughout the project
 
 #### features
 
 As opposed to dividing files into `containers` for logic and `components` for presentation then putting redux logic in a separate folder, this template couples logic, presentation and redux state for each feature separately. Thus, redux state is divided into "slices" where each slice is coupled with a feature. The template also imposes not using own props with connected components.
 
-For example, a login feature contains a slice of the redux state to manage credentials and session, and a component for presenting and submitting the form. 
+For example, a login feature contains a slice of the redux state to manage credentials and session, and a component for presenting and submitting the form.
 
 Example
 
@@ -198,11 +200,9 @@ export const loginReducer = loginSlice.reducer;
  * or by 'mapDispatchToProps' in the redux 'connect' function
  */
 export const loginActions = { ...loginSlice.actions, makeLoginApiCall };
-
 ```
 
 ```ts
-
 // login.component.tsx
 import React, { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
@@ -332,16 +332,13 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 const LoginComponentRedux = connector(LoginComponent);
 
 export { LoginComponentRedux as LoginComponent };
-
 ```
-
-
 
 #### styled
 
 #### locales & i18n
 
-This template supports adding internationalization (i18n) for multiple languages. [`i18n.ts`](src/config/i18n.ys) under the [`config`](src/config) folder contains configuration for i18n. The locales provided for this configuration are located under [`locales`](src/locales) folder. Namely, [`locales`](src/locales) include files such as [`en.ts`](src/locales/en.ts) for English and [`ar.ts`](src/locales/ar.ts) for Arabic. The structure of these files is as follows: 
+This template supports adding internationalization (i18n) for multiple languages. [`i18n.ts`](src/config/i18n.ys) under the [`config`](src/config) folder contains configuration for i18n. The locales provided for this configuration are located under [`locales`](src/locales) folder. Namely, [`locales`](src/locales) include files such as [`en.ts`](src/locales/en.ts) for English and [`ar.ts`](src/locales/ar.ts) for Arabic. The structure of these files is as follows:
 
 Example
 
@@ -367,14 +364,14 @@ let ar = {
 };
 
 export default ar;
-
 ```
-These properties are called *NameSpaces* and based on the project structure, each feature should have its own namespace with translations if it should support localization.
+
+These properties are called _NameSpaces_ and based on the project structure, each feature should have its own namespace with translations if it should support localization.
 
 Example
 
 ```ts
-// login.i18n.ts 
+// login.i18n.ts
 
 /**
  * i18n login namespace
@@ -410,9 +407,9 @@ export const loginNameSpace = {
     REGISTER_NOW: "قم بالتسجيل الان",
   },
 };
-
 ```
-Whenever a new translation namespace file is added for a new feature, it should be specified in locale files under [`locales`](src/locales). 
+
+Whenever a new translation namespace file is added for a new feature, it should be specified in locale files under [`locales`](src/locales).
 
 To use translations inside components, the `useTranslation` hook should be imported and initialized with the component's feature namespace.
 
@@ -428,8 +425,7 @@ import { useTranslation } from "react-i18next";
 const { t } = useTranslation(["login"]);
 
 // Usage (LOGIN_PAGE is a key specified in login.i18n.ts file)
- <h1>{t("LOGIN_PAGE")}</h1>
-
+<h1>{t("LOGIN_PAGE")}</h1>;
 ```
 
 #### route
@@ -440,14 +436,13 @@ The template uses [react-router-dom](https://reactrouter.com/web/guides/quick-st
 
 2. Dispatching the `redux-first-history` actions `push`, `replace`, `go`, `goBack`, `goForward` using `useDispatch` hook, or using in `mapDispatchToProps`. (Note: the `pathname` passed to these methods is a regular pathname of the form `/<your specific path>`)
 
-Redux-first-history will be the source of truth for routing location. It changes history based on dispatched actions or when `window.location.url` changes manually. This library has other useful features such as saving up to n previous paths in redux. 
+Redux-first-history will be the source of truth for routing location. It changes history based on dispatched actions or when `window.location.url` changes manually. This library has other useful features such as saving up to n previous paths in redux.
 
 Routes can be found in [`App.tsx`](src/App.tsx) wrapped with the `<Router />` component. In addition to regular routes, the template adds a protected route component [`<ProtectedRoute />`](src/route/protectedRoute.tsx) that directs (or redirects) based on a validation boolean. Exceptionally, a validation boolean and a fallback route are passed as a `prop` to this component to decouple it from Redux and make it usable on its own. The validation boolean coul be the authentication state, while the fallback route is the route used for redirecting in case authentication fails.
 
-Example 
+Example
 
 ```ts
-
 //App.tsx
 import React, { useEffect } from "react";
 import { Router, Route, Switch, Redirect } from "react-router";
@@ -531,7 +526,6 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 const AppRedux = connector(App);
 
 export { AppRedux as App };
-
 ```
 
 Other customized routing middlewares can be added based on usecases using the same method.
@@ -539,7 +533,6 @@ Other customized routing middlewares can be added based on usecases using the sa
 #### utils
 
 This folder includes general util files used throughout the project.
-
 
 #### cli
 
@@ -551,15 +544,15 @@ Example
 
 Notice that the `path` option enables nested styled component or nested features. For example, styled components reated to "forms" may all be under the same folder in styled.
 
-* For styled components, the cli tool generates `<filename>.styled.tsx` and `<filename>.styled.css` template files under `/styled/<customized path>/<filename>`
+- For styled components, the cli tool generates `<filename>.styled.tsx` and `<filename>.styled.css` template files under `/styled/<customized path>/<filename>`
 
-* For features, the cli tool generates `<filename>.component.tsx`, `<filename>.slice.ts`, `<filename>.type.ts` and `<filename>.i18n.ts` template files under `/features/<customized path>/<filename>`
+- For features, the cli tool generates `<filename>.component.tsx`, `<filename>.slice.ts`, `<filename>.type.ts` and `<filename>.i18n.ts` template files under `/features/<customized path>/<filename>`
 
 ### path alias
 
 The template supports path aliases to shorten `import` statements. Ex : for accessing a deeply nested module from another, use `&<some module>/<some file>` instead of `../../<some module>/<some file>` and so on.
 
-For adding new path aliases, follow these two steps: 
+For adding new path aliases, follow these two steps:
 
 1. Add `"&<your alias>/*": ["path/to/your/alias/*"]` in [`tsconfig.paths.json`](tsconfig.paths.json)
 
@@ -567,14 +560,13 @@ For adding new path aliases, follow these two steps:
 
 Note:
 
-* You can remove or replace "&" symbol with any other symbol, but make sure to be consistent.
+- You can remove or replace "&" symbol with any other symbol, but make sure to be consistent.
 
-* Reload or restart your IDE or text editor for configurations to appear.
-
+- Reload or restart your IDE or text editor for configurations to appear.
 
 ## Project Features
 
-- [Typescript](https://www.typescriptlang.org/) for scalability, code clarity, ease of debugging, etc ... 
+- [Typescript](https://www.typescriptlang.org/) for scalability, code clarity, ease of debugging, etc ...
 - [redux-toolkit](https://redux-toolkit.js.org/) toolset for efficient Redux development
 - [redux-persist](https://github.com/rt2zz/redux-persist) to persist and rehydrate Redux store
 - [react-i18next](https://react.i18next.com/) for internationalization and localization
@@ -583,7 +575,7 @@ Note:
 - [electron-packager](https://github.com/electron/electron-packager) to compile and package as desktop apps
 - fully functional components
 - cli tool to generate template files that follow project pattern.
-- path aliases to reduce import statements' length 
+- path aliases to reduce import statements' length
 
 ## Note: Demo Files:
 
@@ -594,6 +586,3 @@ To remove demo files:
 3. Remove routes that use demo components in [`App.tsx`](src/App.tsx)
 4. Verify that demo namespaces included in locale files under [`locales`](src/locales) folder are removed.
 5. Verify that [`App.tsx`](src/App.tsx) does not use demo reducers in connect.
-
-
-
