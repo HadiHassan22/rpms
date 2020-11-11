@@ -8,6 +8,8 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.2.5",
+    "@rpldy/upload-button": "^0.7.1",
+    "@rpldy/uploady": "^0.7.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -77,5 +79,6 @@
     "react-app-rewired": "^2.1.6",
     "serve": "^11.3.2",
     "wait-on": "^5.2.0"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }

@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { connect, ConnectedProps, useDispatch } from "react-redux";
 import { Button, Form, Card, Col, Row, Select } from "antd";
 import { Option } from "antd/lib/mentions";
+import Uploady, { useItemProgressListener } from "@rpldy/uploady";
+import UploadButton from "@rpldy/upload-button";
+import { Circle } from "rc-progress";
 
 import { RootState } from "&store/store";
 import { loginActions } from "&features/demo/login/login.slice";
@@ -14,6 +17,24 @@ import { loginActions } from "&features/demo/login/login.slice";
 import { petitionActions } from "./petitions.slice";
 
 type ReduxProps = ConnectedProps<typeof connector>;
+
+const UploadProgress = () => {
+  const [progress, setProgess] = useState(0);
+  const progressData = useItemProgressListener();
+  if (progressData && progressData.completed > progress) {
+    setProgess(() => progressData.completed);
+  }
+  return (
+    progressData && (
+      <Circle
+        style={{ height: "30px" }}
+        strokeWidth={10}
+        strokeColor={progress === 100 ? "#00a626" : "#2db7f5"}
+        percent={progress}
+      />
+    )
+  );
+};
 
 const PetitionComponent = (props: ReduxProps) => {
   const { logout, addPetition } = props;
@@ -29,7 +50,6 @@ const PetitionComponent = (props: ReduxProps) => {
             name="create_petition"
             initialValues={{ remember: false }}
             onFinish={(values: Object) => {
-              alert(JSON.stringify(values));
               dispatch(addPetition(JSON.stringify(values)));
             }}
           >
@@ -69,6 +89,26 @@ const PetitionComponent = (props: ReduxProps) => {
                 </Select>
               </Form.Item>
             ) : null}
+
+            <Form.Item>
+              <Uploady
+                autoUpload={false}
+                destination={{ url: "/api/transcript" }}
+                sendWithFormData={false}
+              >
+                <div
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <UploadButton text="Upload Transcript" />
+                  <UploadProgress />
+                </div>
+              </Uploady>
+            </Form.Item>
 
             <Form.Item>
               <Button type="primary" htmlType="submit" block>

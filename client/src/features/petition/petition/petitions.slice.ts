@@ -20,9 +20,15 @@ const addPetition = createAsyncThunk(
   // Delete this method if not needed
   "petition/create",
   async (body: any) => {
+    console.log("!!!!!");
     console.log(body);
-    Axios.post("api/petition", body).then((response) => {
-      return response.data;
+    Axios.post("api/petition", JSON.parse(body)).then((response) => {
+      if (response.status === 200) {
+        alert(JSON.stringify(response.data));
+        return response.data;
+      } else {
+        alert(response.status);
+      }
     });
   }
 );
@@ -83,7 +89,7 @@ const petitionSlice = createSlice({
       }
     );
     builder.addCase(addPetition.rejected, (state, action) => {
-      // Write failure logic here
+      alert(action.payload);
     });
   },
 });
