@@ -6,6 +6,6 @@ const PetitionSchema = new mongoose.Schema({
   course: String,
   course2: String,
   accepted: Boolean,
-});
+},{timestamps: true});
 
 module.exports = mongoose.model("Petition", PetitionSchema);
