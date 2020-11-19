@@ -9,7 +9,8 @@
       "&store/*": ["./src/store/*"],
       "&route/*": ["./src/route/*"],
       "&locales/*": ["./src/locales/*"],
-      "&utils/*": ["./src/utils/*"]
+      "&utils/*": ["./src/utils/*"],
+      "&api/*": ["./src/api/*"]
     }
   }
 }

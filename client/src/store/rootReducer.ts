@@ -1,6 +1,7 @@
 import { combineReducers, Reducer } from "redux";
 
 import { loginReducer } from "&features/demo/login/login.slice";
+import { petitionReducer } from "&features/petition/petition/petitions.slice";
 /**
  * Combines reducers of all slices and router into one root reducer
  *
@@ -10,6 +11,7 @@ const createRootReducer = (routerReducer: Reducer) =>
   combineReducers({
     router: routerReducer,
     login: loginReducer,
+    petition: petitionReducer,
     // TODO add other reducers
     // The rest of your reducers go here in the following format:
     // ...

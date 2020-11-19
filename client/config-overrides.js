@@ -12,6 +12,7 @@ module.exports = function override(config) {
       "&route": path.resolve(__dirname, "src/route"),
       "&locales": path.resolve(__dirname, "src/locales"),
       "&utils": path.resolve(__dirname, "src/utils"),
+      "&api": path.resolve(__dirname, "src/api"),
     },
   };
   return config;

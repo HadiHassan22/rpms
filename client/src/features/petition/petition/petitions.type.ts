@@ -7,6 +7,8 @@ export interface Petitions {
 }
 
 interface Petition {
+  _id: string;
+
   type: string;
 
   course: string;

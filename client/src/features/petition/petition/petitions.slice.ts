@@ -14,24 +14,6 @@ const initialState: Petitions = { petitions: [] };
  * Thunks are dispatched in the same way regular actions are dispatched.
  * A slice can have multiple thunks
  */
-const addPetition = createAsyncThunk(
-  // TODO change this method based on usecase
-  // You can add as many thunks as required
-  // Delete this method if not needed
-  "petition/create",
-  async (body: any) => {
-    console.log("!!!!!");
-    console.log(body);
-    Axios.post("api/petition", JSON.parse(body)).then((response) => {
-      if (response.status === 200) {
-        alert(JSON.stringify(response.data));
-        return response.data;
-      } else {
-        alert(response.status);
-      }
-    });
-  }
-);
 
 /**
  * Feature slice Object
@@ -70,27 +52,27 @@ const petitionSlice = createSlice({
       return { ...state, ...action.payload };
     },
     reset: () => initialState,
+    addPetition: (state, action) => {
+      state.petitions.push(action.payload);
+    },
+    acceptPetition: (state, action) => {
+      const petition = state.petitions.find(
+        (petition) => petition._id === action.payload
+      );
+      if (petition) {
+        petition.status = "accepted";
+      }
+    },
+    rejectPetition: (state, action) => {
+      const petition = state.petitions.find(
+        (petition) => petition._id === action.payload
+      );
+      if (petition) {
+        petition.status = "rejected";
+      }
+    },
     // Add here reducers
     // ...
-  },
-  /**
-   * Extra reducers are for handling action types.
-   * Here thunk actions are handled
-   */
-  extraReducers: (builder) => {
-    // TODO remove extraReducers if there are no thunks
-    builder.addCase(addPetition.pending, (state, action) => {
-      // Write pending logic here
-    });
-    builder.addCase(
-      addPetition.fulfilled,
-      (state, action: { payload: any; type: string }) => {
-        state.petitions.push(action.payload);
-      }
-    );
-    builder.addCase(addPetition.rejected, (state, action) => {
-      alert(action.payload);
-    });
   },
 });
 
@@ -106,5 +88,4 @@ export const petitionReducer = petitionSlice.reducer;
  */
 export const petitionActions = {
   ...petitionSlice.actions,
-  addPetition,
 };

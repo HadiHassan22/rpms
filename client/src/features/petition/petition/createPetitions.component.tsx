@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { connect, ConnectedProps, useDispatch } from "react-redux";
+import { connect, ConnectedProps } from "react-redux";
 import { Button, Form, Card, Col, Row, Select } from "antd";
 import { Option } from "antd/lib/mentions";
 import Uploady, { useItemProgressListener } from "@rpldy/uploady";
@@ -8,6 +8,7 @@ import { Circle } from "rc-progress";
 
 import { RootState } from "&store/store";
 import { loginActions } from "&features/demo/login/login.slice";
+import { createPetition } from "../../../api/petition.api";
 
 /**
  * These are actions imported from the feature slices.
@@ -39,7 +40,11 @@ const UploadProgress = () => {
 const PetitionComponent = (props: ReduxProps) => {
   const { logout, addPetition } = props;
   const [petitionType, setPetitionType] = useState("capacity");
-  const dispatch = useDispatch();
+  
+  const storePetition = async (body: any) => {
+    const response = await createPetition(body);
+    addPetition(response.data);
+  };
 
   return (
     <Row justify={"center"}>
@@ -50,11 +55,11 @@ const PetitionComponent = (props: ReduxProps) => {
             name="create_petition"
             initialValues={{ remember: false }}
             onFinish={(values: Object) => {
-              dispatch(addPetition(JSON.stringify(values)));
+              storePetition({ ...values, ...{ status: "pending" } });
             }}
           >
             <Form.Item
-              name="petition_type"
+              name="type"
               rules={[
                 { required: true, message: "Please enter type of petition" },
               ]}
@@ -129,7 +134,7 @@ const PetitionComponent = (props: ReduxProps) => {
  * @param state
  */
 const mapStateToProps = (state: RootState) => ({
-  // Map your redux state to your props here
+  petitions: state.petition,
 });
 
 /**
