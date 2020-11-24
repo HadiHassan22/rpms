@@ -11,6 +11,6 @@ const subSchema = new mongoose.Schema({
   }
 });
 
-const Course = mongoose.model('Course', subSchema)
+const student_Course = mongoose.model('studentCourse', subSchema)
 
-module.exports = Course
+module.exports = student_Course

@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const subSchema = require("../../src/models/Course");
 
 const All_CoursesSchema = new mongoose.Schema({
-    Student_name: {
-      type: String,
-      required: true
-    },
-    course_names: [ {grade: {type: String, required: true}, course_name: {type: String,required: true}}],
+   // Student_name: {
+    //  type: String,
+    //  required: true
+    //},
+    course_name_grade: {type: Array, "defeault":[]},
   });
   
-  const All_Courses = mongoose.model('Courses', All_CoursesSchema)
+  const StudentGrades = mongoose.model('Courses', All_CoursesSchema)
   
-  module.exports = All_Courses
+  module.exports = StudentGrades
