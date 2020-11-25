@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const PetitionSchema = new mongoose.Schema(
   {
-    number: Number,
+    student_id: String,
     type: String,
     course: String,
     course2: String,

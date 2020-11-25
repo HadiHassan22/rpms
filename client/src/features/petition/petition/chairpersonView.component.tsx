@@ -1,8 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
-import { Badge, Layout, Menu, Space, Table, Tag, Typography } from "antd";
+import {
+  Badge,
+  Form,
+  Input,
+  Layout,
+  Menu,
+  Popconfirm,
+  Radio,
+  Space,
+  Table,
+  Tag,
+  Modal,
+  Typography,
+  Button,
+  InputNumber,
+} from "antd";
 import { BookOutlined, FileDoneOutlined } from "@ant-design/icons";
-import { getPetitions, updatePetition } from "../../../api/petition.api";
+import {
+  getPetitions,
+  getRules,
+  postRule,
+  updatePetition,
+} from "../../../api/petition.api";
 
 import { RootState } from "&store/store";
 /**
@@ -12,6 +32,8 @@ import { RootState } from "&store/store";
  */
 import { petitionActions } from "./petitions.slice";
 import { loginActions } from "&features/demo/login/login.slice";
+import { EditableCell } from "./editableCell";
+import Item from "antd/lib/list/Item";
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
@@ -20,20 +42,44 @@ const { Title } = Typography;
 
 const ChairPersonComponent = (props: ReduxProps) => {
   const { petitions, setPetitions, acceptPetition, rejectPetition } = props;
+  const [visible, setVisible] = useState(false);
+
+  const [viewState, setViewState] = useState("petitions");
+
+  const inputNode = <Input />;
 
   const dispatch = useDispatch();
 
+  interface Item {
+    key: string;
+    course_name: string;
+    prerequisiteCourseName: string;
+    prerequisiteCourseGrade: string;
+    prerequisiteCourseName2: string;
+    prerequisiteCourseGrade2: string;
+  }
+
+  const originData = [] as any;
+  const [ruleData, setData] = useState(originData);
   useEffect(() => {
     const fetchPetitions = async () => {
       try {
         const response = await getPetitions();
         setPetitions({ petitions: response.data });
+        const ruleResponse = await getRules();
+        for (let i = 0; i < ruleResponse.data.length; i++) {
+          originData.push({
+            key: i.toString(),
+            ...ruleResponse.data[i],
+          });
+        }
+        setData(originData);
       } catch (e) {
         console.error(e);
       }
     };
     fetchPetitions();
-  }, []);
+  }, [visible]);
 
   const accept = async (id: String) => {
     const response = await updatePetition({ status: "accepted" }, id);
@@ -97,7 +143,122 @@ const ChairPersonComponent = (props: ReduxProps) => {
     },
   ];
 
+  const ruleColumns = [
+    {
+      title: "Course Name",
+      dataIndex: "course_name",
+      width: "20%",
+      editable: true,
+    },
+    {
+      title: "Prerequisite Course",
+      dataIndex: "prerequisiteCourseName",
+      width: "20%",
+      editable: true,
+    },
+    {
+      title: "Prerequisite Grade",
+      dataIndex: "prerequisiteCourseGrade",
+      width: "20%",
+      editable: true,
+    },
+    {
+      title: "Prerequisite Course 2",
+      dataIndex: "prerequisiteCourseName2",
+      width: "20%",
+      editable: true,
+    },
+    {
+      title: "Prerequisite Grade 2",
+      dataIndex: "prerequisiteCourseGrade2",
+      width: "20%",
+      editable: false,
+    },
+    {
+      title: "Operation",
+      dataIndex: "operation",
+      render: (_: any, record: any) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <span>
+            <a
+              href="javascript:;"
+              onClick={() => save(record.key)}
+              style={{ marginRight: 8 }}
+            >
+              Save
+            </a>
+            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+              <a>Cancel</a>
+            </Popconfirm>
+          </span>
+        ) : (
+          <a onClick={() => edit(record)}>Edit</a>
+        );
+      },
+    },
+  ];
+
+  const onCreate = async (values) => {
+    postRule(values);
+    setVisible(false);
+  };
+
+  const [editingKey, setEditingKey] = useState("");
+  const [form] = Form.useForm();
+
+  const isEditing = (record: Item) => record.key === editingKey;
+
+  const edit = (record: Item) => {
+    form.setFieldsValue({ ...record });
+    setEditingKey(record.key);
+  };
+
+  const cancel = () => {
+    setEditingKey("");
+  };
+
   const data = petitions;
+
+  const save = async (key: React.Key) => {
+    try {
+      const row = (await form.validateFields()) as Item;
+
+      const newData = [...ruleData];
+      const index = newData.findIndex((item) => key === item.key);
+      if (index > -1) {
+        const item = newData[index];
+        newData.splice(index, 1, {
+          ...item,
+          ...row,
+        });
+        setData(newData);
+        setEditingKey("");
+      } else {
+        newData.push(row);
+        setData(newData);
+        setEditingKey("");
+      }
+    } catch (errInfo) {
+      console.log("Validate Failed:", errInfo);
+    }
+  };
+
+  const mergedColumns = ruleColumns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record: any) => ({
+        record,
+        inputType: "text",
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(record),
+      }),
+    };
+  });
 
   const rowSelection = {
     onChange: (selectedRowKeys: any, selectedRows: any) => {
@@ -138,29 +299,116 @@ const ChairPersonComponent = (props: ReduxProps) => {
           </Title>
         </div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]}>
-          <Menu.Item key="1" icon={<FileDoneOutlined />}>
+          <Menu.Item
+            key="1"
+            onClick={() => setViewState("petitions")}
+            icon={<FileDoneOutlined />}
+          >
             Petitions
           </Menu.Item>
-          <Menu.Item key="2" icon={<BookOutlined />}>
+          <Menu.Item
+            key="2"
+            onClick={() => setViewState("courses")}
+            icon={<BookOutlined />}
+          >
             Courses
           </Menu.Item>
         </Menu>
       </Sider>
 
       <Layout>
-        {/* <Header></Header> */}
-        {/* <Header
-          className="site-layout-sub-header-background"
-          style={{ padding: 0 }}
-        /> */}
         <Content style={{ margin: "24px 16px 0" }}>
-          {/* <div style={{ background: "#FFF", padding: 24, minHeight: 360 }}> */}
-          <Table
-            rowSelection={{ type: "checkbox", ...rowSelection }}
-            columns={columns}
-            dataSource={data}
-          />
-          {/* </div> */}
+          {viewState === "petitions" ? (
+            <Table
+              rowSelection={{ type: "checkbox", ...rowSelection }}
+              columns={columns}
+              dataSource={data}
+            />
+          ) : (
+            <div>
+              <Button
+                type="primary"
+                onClick={() => {
+                  setVisible(true);
+                }}
+              >
+                New Course Rule
+              </Button>
+              <Form form={form} component={false}>
+                <Table
+                  components={{
+                    body: {
+                      cell: EditableCell,
+                    },
+                  }}
+                  bordered
+                  dataSource={ruleData}
+                  columns={mergedColumns}
+                  rowClassName="editable-row"
+                  pagination={{
+                    onChange: cancel,
+                  }}
+                />
+              </Form>
+              <Modal
+                visible={visible}
+                title="Create a new collection"
+                okText="Create"
+                cancelText="Cancel"
+                onCancel={() => setVisible(false)}
+                onOk={() => {
+                  form
+                    .validateFields()
+                    .then((values) => {
+                      form.resetFields();
+                      onCreate(values);
+                    })
+                    .catch((info) => {
+                      console.log("Validate Failed:", info);
+                    });
+                }}
+              >
+                <Form form={form} layout="vertical" name="form_in_modal">
+                  <Form.Item
+                    name="course_name"
+                    label="Course Name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input the name of course!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="prerequisiteCourseName"
+                    label="Prerequisite Course Name"
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="prerequisiteCourseGrade"
+                    label="Prerequisite Course Grade"
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="prerequisiteCourseName2"
+                    label="Prerequisite Course Name 2"
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="prerequisiteCourseGrade2"
+                    label="Prerequisite Course Grade2"
+                  >
+                    <Input />
+                  </Form.Item>
+                </Form>
+              </Modal>
+            </div>
+          )}
         </Content>
         <Footer style={{ textAlign: "center" }}>
           <a href="#/login">{"Go to student view"}</a>
