@@ -27,6 +27,7 @@ import {
  * to dispatch these actions
  */
 import { petitionActions } from "./petitions.slice";
+import { number } from "yup";
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
@@ -115,11 +116,48 @@ const PetitionComponent = (props: ReduxProps) => {
             }}
           >
             <Form.Item
+              name="student_name"
+              rules={[
+                { required: true, message: "Please enter your name" },
+                {
+                  type: "string",
+                  message: "please enter your name",
+                  //len: 40,
+                },
+              ]}
+            >
+              <Input
+                minLength={4}
+                maxLength={40}
+                placeholder={"Student name"}
+              ></Input>
+
+            </Form.Item>
+            <Form.Item
+              name="major"
+              rules={[
+                { required: true, message: "Please enter your Major" },
+                {
+                  type: "string",
+                  message: "Please enter a your Major",
+                  //len: 10,
+                },
+              ]}
+            >
+              <Input
+                minLength={3}
+                maxLength={40}
+                placeholder={"Major"}
+              ></Input>
+
+            </Form.Item>
+
+            <Form.Item
               name="student_id"
               rules={[
                 { required: true, message: "Please enter your student ID" },
                 {
-                  type: "string",
+                  type: "number",
                   message: "Please enter a valid ID",
                   len: 9,
                 },
