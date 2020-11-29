@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import {
   Badge,
@@ -35,6 +37,7 @@ import { loginActions } from "&features/demo/login/login.slice";
 import { EditableCell } from "./editableCell";
 import Item from "antd/lib/list/Item";
 
+
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -49,6 +52,7 @@ const ChairPersonComponent = (props: ReduxProps) => {
   const inputNode = <Input />;
 
   const dispatch = useDispatch();
+  
 
   interface Item {
     key: string;
@@ -58,12 +62,20 @@ const ChairPersonComponent = (props: ReduxProps) => {
     prerequisiteCourseName2: string;
     prerequisiteCourseGrade2: string;
   }
+  
+
+  
 
   const originData = [] as any;
+  const initCourses = [] as any;
   const [ruleData, setData] = useState(originData);
+  const [studentCourses, setStudentCourses] = useState(initCourses);
+
   useEffect(() => {
     const fetchPetitions = async () => {
       try {
+        const Rulesresponse = await getRules();
+        setStudentCourses(Rulesresponse.data);
         const response = await getPetitions();
         setPetitions({ petitions: response.data });
         const ruleResponse = await getRules();
@@ -91,14 +103,47 @@ const ChairPersonComponent = (props: ReduxProps) => {
     rejectPetition(response.data._id);
   };
 
+
   const columns = [
     {
       title: "Type",
       dataIndex: "type",
+      filters:[
+        {
+          text: 'capacity',
+          value: 'capacity',
+        },
+        {
+        text: 'co-requiste',
+        value: 'co-requiste',
+        },
+        {
+          text: 'restriction',
+          value: 'restriction',
+        },
+
+        
+      
+      ],
+    onFilter: (value, record) => record.type.indexOf(value) === 0,
+    sorter: (a, b) => a.type.length - b.type.length,
+    sortDirections: ['descend'],
     },
     {
       title: "Course",
       dataIndex: "course",
+      filters: studentCourses.map((course) =>{
+        return {
+          text: course.course_name,
+          value: course.course_name,
+        }
+      }
+
+      ), 
+    onFilter: (value, record) => record.course.indexOf(value) === 0,
+    sorter: (a, b) => a.course.length - b.course.length,
+    sortDirections: ['descend'],
+      
     },
     {
       title: "Course",
@@ -142,7 +187,11 @@ const ChairPersonComponent = (props: ReduxProps) => {
       ),
     },
   ];
+  
 
+  
+
+  
   const ruleColumns = [
     {
       title: "Course Name",
@@ -198,6 +247,8 @@ const ChairPersonComponent = (props: ReduxProps) => {
       },
     },
   ];
+  
+  
 
   const onCreate = async (values) => {
     postRule(values);

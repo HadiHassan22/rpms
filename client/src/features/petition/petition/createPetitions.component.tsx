@@ -98,6 +98,23 @@ const PetitionComponent = (props: ReduxProps) => {
     fileReader.readAsText(file);
   };
 
+  /// to create the text area
+  const { TextArea } = Input;
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 6 }
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 14 }
+    }
+  };
+  
+
+
+
   return (
     <Row justify={"center"}>
       <Col xs={24} sm={24} md={18} lg={8} xl={8}>
@@ -151,21 +168,21 @@ const PetitionComponent = (props: ReduxProps) => {
               ></Input>
 
             </Form.Item>
-
+            
             <Form.Item
               name="student_id"
               rules={[
                 { required: true, message: "Please enter your student ID" },
                 {
-                  type: "number",
+                  type: "number", //must be changed to number
                   message: "Please enter a valid ID",
-                  len: 9,
+                 // len: 9,
                 },
               ]}
             >
               <Input
-                minLength={9}
-                maxLength={9}
+               // minLength={9}
+               // maxLength={9}
                 placeholder={"Student ID Number"}
               ></Input>
             </Form.Item>
@@ -181,6 +198,7 @@ const PetitionComponent = (props: ReduxProps) => {
               >
                 <Option value="capacity">Capacity</Option>
                 <Option value="corequisite">Co-Requisite</Option>
+                <Option value="restriction">Restriction</Option>
               </Select>
             </Form.Item>
 
@@ -208,6 +226,25 @@ const PetitionComponent = (props: ReduxProps) => {
                 </Select>
               </Form.Item>
             ) : null}
+
+          <Form.Item
+              name="details"
+              rules={[
+                      
+              {
+                  type: "string",
+                        
+              },
+            ]}
+          >
+          <TextArea
+            minLength={0}
+            maxLength={150}
+            placeholder={"Ruther explain your reasons for this petition"}
+          ></TextArea>
+
+        </Form.Item>
+                        
             <Input
               addonBefore="Upload Transcript"
               onChange={(e: any) => handleFileChosen(e.target.files[0])}
