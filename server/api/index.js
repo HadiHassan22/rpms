@@ -10,6 +10,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require("passport");
+const nodemailer = require("nodemailer");
+const sendgridTransport = require("nodemailer-sendgrid-transport");
+const sgMail = require('@sendgrid/mail');
 
 //loading models
 const Prerequisites = require("../../src/models/prerequisites");
@@ -20,6 +23,17 @@ const User = require("../../src/models/Users");
 const validateRegisterInput = require("./register");
 const validateLoginInput = require("./login");
 const { prependListener } = require("../../src/models/prerequisites");
+
+
+//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
+//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
+
+
+const transporter = nodemailer.createTransport(sendgridTransport({
+  auth:{
+    api_key:"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"
+  }
+}))
 
 // support parsing of application/json type post data
 router.use(bodyParser.json());
@@ -92,6 +106,19 @@ router.post("/petition/edit/:id", async (req, res) => {
   const id = req.params.id;
   const data = req.body;
   let petition = new Petition();
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY); // sending email notification
+  const msg = {
+    to: 'ymf04@mail.aub.edu',
+    from: 'no-reply@cmps-department',
+    subject: 'your petition is updated',
+    text: 'please login to RPMS and check your petition status',
+  };
+  sgMail.send(msg).then(() => {
+    console.log('Email sent')
+  })
+  .catch((error) => {
+    console.error(error)
+  })
   let response = await petition.updatePetitionById(id, data);
   console.log(response);
   res.header("Content-Type", "application/json");
@@ -146,7 +173,15 @@ router.post("/register", (req, res) => {
           newUser.password = hash;
           newUser
             .save()
-            .then((user) => res.json(user))
+            .then(user =>{ 
+              transporter.sendMail({
+                to: newUser.email,
+                from: "no-reply@cmps-department",
+                subject:"signup success",
+                html: "<h1>welcome to RPMS</h1>"
+              })
+              res.json(user)
+            })
             .catch((err) => console.log(err));
         });
       });

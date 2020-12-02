@@ -174,15 +174,16 @@ const PetitionComponent = (props: ReduxProps) => {
               rules={[
                 { required: true, message: "Please enter your student ID" },
                 {
-                  type: "number", //must be changed to number
+                  type: "string", 
+                  pattern: new RegExp("^[0-9]{9}$"),
                   message: "Please enter a valid ID",
-                 // len: 9,
+                  //len:9
                 },
               ]}
             >
               <Input
-               // minLength={9}
-               // maxLength={9}
+               minLength={9}
+                maxLength={9}
                 placeholder={"Student ID Number"}
               ></Input>
             </Form.Item>

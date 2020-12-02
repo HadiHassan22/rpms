@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import {
   Badge,
@@ -269,7 +267,10 @@ const ChairPersonComponent = (props: ReduxProps) => {
     setEditingKey("");
   };
 
-  const data = petitions;
+ const data = petitions.map((petition) => ({
+  key: petition._id,
+  ...petition
+}));
 
   const save = async (key: React.Key) => {
     try {

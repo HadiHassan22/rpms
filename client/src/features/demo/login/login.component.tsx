@@ -55,7 +55,12 @@ const LoginComponent = (props: ReduxProps) => {
               name="email"
               rules={[
                 { required: true, message: t("REQUIRED_EMAIL") },
-                { type: "email", message: t("VALID_EMAIL") },
+                {pattern: new RegExp("([a-zA-Z0-9_\\-\\.]+)@((?<![\w\d])mail(?![\w\d]))\.((?<![\w\d])aub(?![\w\d]))\.((?<![\w\d])edu(?![\w\d])|(?<![\w\d])lb(?![\w\d]))"), 
+                message: "please enter a valid university email",
+                },
+                
+                
+                { type: "email" },
               ]}
             >
               <Input
