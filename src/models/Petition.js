@@ -7,6 +7,8 @@ const PetitionSchema = new mongoose.Schema(
     course: String,
     course2: String,
     status: String,
+    requirements: String,
+    email: String,
   },
   { timestamps: true }
 );

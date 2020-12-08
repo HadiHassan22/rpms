@@ -5,10 +5,8 @@ const subSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  prerequisiteCourseName: { type: String, required: false },
-  prerequisiteCourseGrade: { type: String, required: false },
-  prerequisiteCourseName2: { type: String, required: false },
-  prerequisiteCourseGrade2: { type: String, required: false },
+  prerequisiteCourseName: { type: String, required: true },
+  prerequisiteCourseGrade: { type: String, required: true },
 });
 
 const course_rules = mongoose.model("course_rule", subSchema);

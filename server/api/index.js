@@ -69,6 +69,14 @@ router.post("/transcript", uploader.single("src"), async (req, res) => {
   res.send(response);
 });
 
+router.get("/transcript/:id", async (req, res) => {
+  const student_id = req.params.id;
+  let studentGrades = new StudentGrades();
+  const response = await studentGrades.getStudentGrades(student_id);
+  res.header("Content-Type", "application/json");
+  res.send(JSON.stringify(response, null, 4));
+});
+
 //posting ONE course to the database (dont use this)
 router.post("/add-course", (req, res) => {
   const course = new student_Course(req.body);
@@ -129,6 +137,14 @@ router.post("/petition/edit/:id", async (req, res) => {
 router.get("/petition", async (req, res) => {
   let petition = new Petition();
   let response = await petition.getPetitions();
+  res.header("Content-Type", "application/json");
+  res.send(JSON.stringify(response, null, 4));
+});
+
+router.get("/petition/:email", async (req, res) => {
+  let petition = new Petition();
+  let email = req.params.email;
+  let response = await petition.getPetitionsByStudent(email);
   res.header("Content-Type", "application/json");
   res.send(JSON.stringify(response, null, 4));
 });
@@ -232,6 +248,7 @@ router.post("/login", (req, res) => {
           (err, token) => {
             res.json({
               success: true,
+              email: email,
               token: "Bearer " + token,
             });
           }
