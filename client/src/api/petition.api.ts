@@ -4,6 +4,10 @@ export const getPetitions = async () => {
   return axios.get("api/petition");
 };
 
+export const getPetitionsByStudent = async (email: String) => {
+  return axios.get("api/petition/" + email);
+};
+
 export const createPetition = async (body: any) => {
   return axios.post("api/petition", body);
 };
@@ -14,6 +18,10 @@ export const updatePetition = async (body: any, id: String) => {
 
 export const createStudentGrades = async (body: any) => {
   return axios.post("api/transcript", body);
+};
+
+export const getStudentGrades = async (id: String) => {
+  return axios.get("api/transcript/" + id);
 };
 
 export const getRules = async () => {

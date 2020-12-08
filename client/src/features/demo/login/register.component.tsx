@@ -15,8 +15,8 @@ import { loginActions } from "./login.slice";
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const LoginComponent = (props: ReduxProps) => {
-  const { logIn, isLoggedIn, push } = props;
+const RegisterComponent = (props: ReduxProps) => {
+  const { register, isLoggedIn, push } = props;
 
   /**
    * i18n translation function.
@@ -38,29 +38,30 @@ const LoginComponent = (props: ReduxProps) => {
   }, [isLoggedIn, push]);
 
   const handleLoginFormSubmit = (values: any) => {
-    logIn(values);
+    register(values);
   };
 
   return (
     <Row justify={"center"}>
       <Col xs={24} sm={24} md={18} lg={8} xl={8}>
         <Card bordered={false}>
-          <h1>{t("LOGIN_PAGE")}</h1>
+          <h1>{"Register Page"}</h1>
           <Form
             name="normal_login"
             initialValues={{ remember: true }}
             onFinish={handleLoginFormSubmit}
           >
+            <Form.Item name="name">
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder={t("USER_NAME")}
+              />
+            </Form.Item>
             <Form.Item
               name="email"
               rules={[
                 { required: true, message: t("REQUIRED_EMAIL") },
-                {pattern: new RegExp("([a-zA-Z0-9_\\-\\.]+)@((?<![\w\d])mail(?![\w\d]))\.((?<![\w\d])aub(?![\w\d]))\.((?<![\w\d])edu(?![\w\d])|(?<![\w\d])lb(?![\w\d]))"), 
-                message: "please enter a valid university email",
-                },
-                
-                
-                { type: "email" },
+                { type: "email", message: t("VALID_EMAIL") },
               ]}
             >
               <Input
@@ -81,22 +82,39 @@ const LoginComponent = (props: ReduxProps) => {
               <Input
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 type="password"
-                placeholder={t("PASSWORD")}
+                placeholder={"Password"}
               />
             </Form.Item>
-            <Form.Item>
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>{t("REMEMBER_ME")}</Checkbox>
-              </Form.Item>
 
-              <a href="#/">{t("FORGOT_PASSWORD")}</a>
+            <Form.Item
+              name="password2"
+              dependencies={["password"]}
+              rules={[
+                { required: true, message: "Please confirm your password!" },
+                ({ getFieldValue }) => ({
+                  validator(rule, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      "The two passwords that you entered do not match"
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder={"Confirm password"}
+              />
             </Form.Item>
 
             <Form.Item>
               <Button type="primary" htmlType="submit" block>
-                {t("LOG_IN")}
+                {"Register"}
               </Button>
-              {t("OR")} <a href="#/register">{t("REGISTER_NOW")}</a>
+              {t("OR")} <a href="#/login">{t("LOG_IN")}</a>
             </Form.Item>
           </Form>
         </Card>
@@ -120,7 +138,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = {
   // map your actions here ex:
   // increment : counterActions.increment
-  logIn: loginActions.makeLoginApiCall,
+  register: loginActions.makeRegisterApiCall,
   push,
 };
 
@@ -128,6 +146,6 @@ const mapDispatchToProps = {
  * Connects component to redux store
  */
 const connector = connect(mapStateToProps, mapDispatchToProps);
-const LoginComponentRedux = connector(LoginComponent);
+const RegisterComponentRedux = connector(RegisterComponent);
 
-export { LoginComponentRedux as LoginComponent };
+export { RegisterComponentRedux as RegisterComponent };

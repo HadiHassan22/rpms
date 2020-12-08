@@ -32,18 +32,19 @@ import { number } from "yup";
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const PetitionComponent = (props: ReduxProps) => {
-  const { logout, addPetition } = props;
+  const { logout, addPetition, email, replace } = props;
 
   const initialCoursesState = [] as any[];
 
   const [petitionType, setPetitionType] = useState("capacity");
-  const [studentCourses, setStudentCourses] = useState(initialCoursesState);
+  const [courses, setCourses] = useState(initialCoursesState);
+  const [grades, setGrades] = useState(initialCoursesState);
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await getRules();
-        setStudentCourses(response.data);
+        setCourses(response.data);
       } catch (e) {
         console.error(e);
       }
@@ -56,9 +57,30 @@ const PetitionComponent = (props: ReduxProps) => {
     addPetition(response.data);
   };
 
-  const postTranscript = async (body: any) => {
-    const response = await createStudentGrades(body);
-    alert(response.data);
+  const handleSubmit = async (values: any) => {
+    const course = values.course;
+    const courseRules = courses.filter((value) => value.course_name === course);
+    const requirementsMet = courseRules.every((rule) => (rule) =>
+      parseInt(
+        studentGrades.find((grade) => {
+          return grade.course_name === rule.prerequisiteCourseName;
+        })?.grade ?? "0"
+      ) >= parseInt(rule.prerequisiteCourseGrade)
+    );
+
+    await createStudentGrades({
+      student_id: values.student_id,
+      courses: grades,
+    });
+    await storePetition({
+      ...values,
+      ...{
+        status: "pending",
+        email: email,
+        requirements: requirementsMet ? "met" : "unmet",
+      },
+    });
+    replace("/student");
   };
 
   let fileReader: FileReader;
@@ -89,7 +111,7 @@ const PetitionComponent = (props: ReduxProps) => {
       all_courses.push(course);
     }
 
-    setStudentCourses(all_courses);
+    setGrades(all_courses);
   };
 
   const handleFileChosen = (file) => {
@@ -123,14 +145,7 @@ const PetitionComponent = (props: ReduxProps) => {
           <Form
             name="create_petition"
             initialValues={{ remember: false }}
-            onFinish={async (values: any) => {
-              await storePetition({ ...values, ...{ status: "pending" } });
-              await createStudentGrades({
-                student_id: values.student_id,
-                courses: studentCourses,
-              });
-              alert("Petition Submitted successfully");
-            }}
+            onFinish={handleSubmit}
           >
             <Form.Item
               name="student_name"
@@ -208,7 +223,7 @@ const PetitionComponent = (props: ReduxProps) => {
               rules={[{ required: true, message: "Please enter course" }]}
             >
               <Select defaultValue="Course" style={{ width: "50%" }}>
-                {studentCourses.map((course) => (
+                {courses.map((course) => (
                   <Option value={course.course_name}>
                     {course.course_name}
                   </Option>
@@ -272,6 +287,7 @@ const PetitionComponent = (props: ReduxProps) => {
  */
 const mapStateToProps = (state: RootState) => ({
   petitions: state.petition,
+  email: state.login.email,
 });
 
 /**
@@ -282,6 +298,7 @@ const mapDispatchToProps = {
   // increment : counterActions.increment
   logout: loginActions.reset,
   addPetition: petitionActions.addPetition,
+  replace,
 };
 
 /**
