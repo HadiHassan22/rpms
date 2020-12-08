@@ -42,13 +42,7 @@ const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
 
 const ChairPersonComponent = (props: ReduxProps) => {
-  const {
-    petitions,
-    setPetitions,
-    acceptPetition,
-    rejectPetition,
-    reset,
-  } = props;
+  const { petitions, setPetitions, acceptPetition, rejectPetition } = props;
   const [visible, setVisible] = useState(false);
 
   const [viewState, setViewState] = useState("petitions");
@@ -63,6 +57,8 @@ const ChairPersonComponent = (props: ReduxProps) => {
     course_name: string;
     prerequisiteCourseName: string;
     prerequisiteCourseGrade: string;
+    prerequisiteCourseName2: string;
+    prerequisiteCourseGrade2: string;
   }
   
 
@@ -76,7 +72,8 @@ const ChairPersonComponent = (props: ReduxProps) => {
   useEffect(() => {
     const fetchPetitions = async () => {
       try {
-        reset();
+        const Rulesresponse = await getRules();
+        setStudentCourses(Rulesresponse.data);
         const response = await getPetitions();
         setPetitions({ petitions: response.data });
         const ruleResponse = await getRules();
@@ -167,9 +164,8 @@ const ChairPersonComponent = (props: ReduxProps) => {
     {
       title: "Requirements",
       key: "requirements",
-      dataIndex: "requirements",
       render: (record: any) => {
-        return record.requirements === "unmet" ? (
+        return record.type === "capacity" ? (
           <Tag color={"error"}>Not met</Tag>
         ) : (
           <Tag color={"success"}>Met</Tag>
@@ -212,6 +208,18 @@ const ChairPersonComponent = (props: ReduxProps) => {
       dataIndex: "prerequisiteCourseGrade",
       width: "20%",
       editable: true,
+    },
+    {
+      title: "Prerequisite Course 2",
+      dataIndex: "prerequisiteCourseName2",
+      width: "20%",
+      editable: true,
+    },
+    {
+      title: "Prerequisite Grade 2",
+      dataIndex: "prerequisiteCourseGrade2",
+      width: "20%",
+      editable: false,
     },
     {
       title: "Operation",
@@ -259,7 +267,10 @@ const ChairPersonComponent = (props: ReduxProps) => {
     setEditingKey("");
   };
 
-  const data = petitions;
+ const data = petitions.map((petition) => ({
+  key: petition._id,
+  ...petition
+}));
 
   const save = async (key: React.Key) => {
     try {
@@ -431,6 +442,18 @@ const ChairPersonComponent = (props: ReduxProps) => {
                   <Form.Item
                     name="prerequisiteCourseGrade"
                     label="Prerequisite Course Grade"
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="prerequisiteCourseName2"
+                    label="Prerequisite Course Name 2"
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="prerequisiteCourseGrade2"
+                    label="Prerequisite Course Grade2"
                   >
                     <Input />
                   </Form.Item>

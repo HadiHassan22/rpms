@@ -16,8 +16,6 @@ import { LandingComponent } from "&features/demo/landing/landing.component";
 import { LoginComponent } from "&features/demo/login/login.component";
 import { PetitionComponent } from "&features/petition/petition/createPetitions.component";
 import { ChairPersonComponent } from "&features/petition/petition/chairpersonView.component";
-import { RegisterComponent } from "&features/demo/login/register.component";
-import { StudentViewComponent } from "&features/petition/petition/studentView.component";
 
 type ReduxProps = ConnectedProps<typeof connector>;
 type AppProps = {
@@ -40,10 +38,8 @@ const App = (props: AppProps & ReduxProps) => {
         <Switch>
           {/* TODO remove the coming demo routes and add your's */}
           <Route exact path="/login" component={LoginComponent} />
-          <Route exact path="/register" component={RegisterComponent} />
           <Route exact path="/" component={LoginComponent} />
           <Route exact path="/chairperson" component={ChairPersonComponent} />
-          <Route exact path="/student" component={StudentViewComponent} />
           <ProtectedRoute
             exact
             path="/home"

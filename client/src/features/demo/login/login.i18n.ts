@@ -5,17 +5,16 @@
 export const loginNameSpace = {
   en: {
     LOGIN_PAGE: "Login Page",
-    EMAIL: "AUB email",
-    USER_NAME: "Full name",
-    REQUIRED_EMAIL: "Please input your AUB email!",
-    VALID_EMAIL: "Please enter a valid AUB email!",
+    USER_NAME: "username",
+    REQUIRED_EMAIL: "Please input your email!",
+    VALID_EMAIL: "Please enter a valid email!",
     PASSWORD: "password",
     REQUIRED_PASSWORD: "Please input your Password!",
     MIN_LENGTH_PASSWORD: "Password should be at least 8 character long!",
     FORGOT_PASSWORD: "Forgot password?",
     REMEMBER_ME: "Remember Me",
     LOG_IN: "Log In",
-    OR: "Or",
+    OR: "OR",
     REGISTER_NOW: "register now!",
   },
   ar: {

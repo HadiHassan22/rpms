@@ -8,13 +8,6 @@ class StudentGrades {
       upsert: true,
     });
   };
-
-  getStudentGrades = async (student_id) => {
-    return STUDENTGRADES.findOne(
-      { student_id: student_id },
-      (err, grades) => grades
-    );
-  };
 }
 
 module.exports = StudentGrades;

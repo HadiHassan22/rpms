@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Input, Button, Form, Card, Checkbox, Col, Row } from "antd";
-import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { push } from "redux-first-history";
 import { useTranslation } from "react-i18next";
 
@@ -64,8 +64,8 @@ const LoginComponent = (props: ReduxProps) => {
               ]}
             >
               <Input
-                prefix={<MailOutlined className="site-form-item-icon" />}
-                placeholder={t("EMAIL")}
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder={t("USER_NAME")}
               />
             </Form.Item>
             <Form.Item

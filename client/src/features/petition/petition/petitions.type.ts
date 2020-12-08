@@ -16,6 +16,4 @@ interface Petition {
   course2?: string;
 
   status: string;
-
-  requirements?: string;
 }

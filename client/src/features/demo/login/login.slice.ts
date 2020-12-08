@@ -1,6 +1,4 @@
-import { login, register } from "&api/auth.api";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { act } from "react-dom/test-utils";
 
 import { Login } from "./login.type";
 
@@ -25,31 +23,7 @@ const makeLoginApiCall = createAsyncThunk(
   "login/makeLoginApiCallStatus",
   async (body: any, thunkApi) => {
     // Make your API call here
-    const response = await login(body);
-    if (response.status == 200) {
-      console.log(response.status);
-      console.log(response.statusText);
-      console.log(response.data);
-      return response.data;
-    } else {
-      alert(response.statusText);
-      return response.statusText;
-    }
-  }
-);
-
-const makeRegisterApiCall = createAsyncThunk(
-  // TODO change this method based on usecase
-  // You can add as many thunks as required
-  // Delete this method if not needed
-  "login/makeRegisterApiCallStatus",
-  async (body: any, thunkApi) => {
-    // Make your API call here
-    const response = await register(body);
-    console.log(response.status);
-    console.log(response.statusText);
-    console.log(response.data);
-    return response.data;
+    return body.email;
   }
 );
 
@@ -106,24 +80,10 @@ const loginSlice = createSlice({
       })
       .addCase(makeLoginApiCall.fulfilled, (state, action) => {
         state.isLoggedIn = true;
-        state.email = action.payload.email;
+        state.email = action.payload;
       })
       .addCase(makeLoginApiCall.rejected, (state, action) => {
         // Write failure logic here
-        alert("invalid username or password please try again");
-        state.isLoggedIn = false;
-      })
-      .addCase(makeRegisterApiCall.pending, (state, action) => {
-        // Write pending logic here
-        console.log(action);
-      })
-      .addCase(makeRegisterApiCall.fulfilled, (state, action) => {
-        state.isLoggedIn = true;
-        state.email = action.payload.email;
-      })
-      .addCase(makeRegisterApiCall.rejected, (state, action) => {
-        // Write failure logic here
-        alert("register failed please try again later");
         state.isLoggedIn = false;
       });
   },
@@ -139,8 +99,4 @@ export const loginReducer = loginSlice.reducer;
  * Actions can be dispached using 'useDispacth' hook,
  * or by 'mapDispatchToProps' in the redux 'connect' function
  */
-export const loginActions = {
-  ...loginSlice.actions,
-  makeRegisterApiCall,
-  makeLoginApiCall,
-};
+export const loginActions = { ...loginSlice.actions, makeLoginApiCall };

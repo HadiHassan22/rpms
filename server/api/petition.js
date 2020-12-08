@@ -10,10 +10,6 @@ class Petition {
     return PETITION.find({}, (err, petitions) => petitions);
   };
 
-  getPetitionsByStudent = async (email) => {
-    return PETITION.find({ email: email }, (err, petitions) => petitions);
-  };
-
   updatePetitionById = async (id, data) => {
     return PETITION.findByIdAndUpdate(id, data);
   };
