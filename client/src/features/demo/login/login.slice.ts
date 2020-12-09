@@ -8,6 +8,7 @@ import { Login } from "./login.type";
  * Initial state object
  */
 const initialState: Login = {
+  admin: false,
   email: "",
   isLoggedIn: false,
 };
@@ -107,6 +108,7 @@ const loginSlice = createSlice({
       .addCase(makeLoginApiCall.fulfilled, (state, action) => {
         state.isLoggedIn = true;
         state.email = action.payload.email;
+        state.admin = action.payload.admin;
       })
       .addCase(makeLoginApiCall.rejected, (state, action) => {
         // Write failure logic here

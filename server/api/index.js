@@ -12,7 +12,7 @@ const keys = require("../../config/keys");
 const passport = require("passport");
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
-const sgMail = require('@sendgrid/mail');
+const sgMail = require("@sendgrid/mail");
 
 //loading models
 const Prerequisites = require("../../src/models/prerequisites");
@@ -24,16 +24,17 @@ const validateRegisterInput = require("./register");
 const validateLoginInput = require("./login");
 const { prependListener } = require("../../src/models/prerequisites");
 
-
 //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
 //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
 
-
-const transporter = nodemailer.createTransport(sendgridTransport({
-  auth:{
-    api_key:"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"
-  }
-}))
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key:
+        "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",
+    },
+  })
+);
 
 // support parsing of application/json type post data
 router.use(bodyParser.json());
@@ -116,17 +117,19 @@ router.post("/petition/edit/:id", async (req, res) => {
   let petition = new Petition();
   sgMail.setApiKey(process.env.SENDGRID_API_KEY); // sending email notification
   const msg = {
-    to: 'ymf04@mail.aub.edu',
-    from: 'no-reply@cmps-department',
-    subject: 'your petition is updated',
-    text: 'please login to RPMS and check your petition status',
+    to: "ymf04@mail.aub.edu",
+    from: "no-reply@cmps-department",
+    subject: "your petition is updated",
+    text: "please login to RPMS and check your petition status",
   };
-  sgMail.send(msg).then(() => {
-    console.log('Email sent')
-  })
-  .catch((error) => {
-    console.error(error)
-  })
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   let response = await petition.updatePetitionById(id, data);
   console.log(response);
   res.header("Content-Type", "application/json");
@@ -154,6 +157,24 @@ router.get("/petition/remove/:id", async (req, res) => {
   const id = req.params.id;
   let petition = new Petition();
   response = await petition.removePetitionById(id);
+  res.header("Content-Type", "application/json");
+  res.send(JSON.stringify(response, null, 4));
+});
+
+router.get("/users", (req, res) => {
+  User.find().then((users) => {
+    console.log(users);
+    res.json(users);
+  });
+});
+
+router.post("/users/edit/:id", async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  console.log(id);
+  let user = new User();
+  let response = await User.findByIdAndUpdate(id, data);
+  console.log(response);
   res.header("Content-Type", "application/json");
   res.send(JSON.stringify(response, null, 4));
 });
@@ -189,14 +210,14 @@ router.post("/register", (req, res) => {
           newUser.password = hash;
           newUser
             .save()
-            .then(user =>{ 
+            .then((user) => {
               transporter.sendMail({
                 to: newUser.email,
                 from: "no-reply@cmps-department",
-                subject:"signup success",
-                html: "<h1>welcome to RPMS</h1>"
-              })
-              res.json(user)
+                subject: "signup success",
+                html: "<h1>welcome to RPMS</h1>",
+              });
+              res.json(user);
             })
             .catch((err) => console.log(err));
         });
@@ -249,6 +270,7 @@ router.post("/login", (req, res) => {
             res.json({
               success: true,
               email: email,
+              admin: user.admin,
               token: "Bearer " + token,
             });
           }

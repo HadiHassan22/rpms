@@ -7,4 +7,6 @@ export interface Login {
 
   /** Login status */
   isLoggedIn: boolean;
+
+  admin?: Boolean;
 }

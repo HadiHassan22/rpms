@@ -18,4 +18,6 @@ interface Petition {
   status: string;
 
   requirements?: string;
+
+  note?: string;
 }

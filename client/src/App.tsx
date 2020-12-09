@@ -42,8 +42,20 @@ const App = (props: AppProps & ReduxProps) => {
           <Route exact path="/login" component={LoginComponent} />
           <Route exact path="/register" component={RegisterComponent} />
           <Route exact path="/" component={LoginComponent} />
-          <Route exact path="/chairperson" component={ChairPersonComponent} />
-          <Route exact path="/student" component={StudentViewComponent} />
+          <ProtectedRoute
+            exact
+            path="/chairperson"
+            component={ChairPersonComponent}
+            validator={isAuthenticated}
+            fallBack="/login"
+          />
+          <ProtectedRoute
+            exact
+            path="/student"
+            component={StudentViewComponent}
+            validator={isAuthenticated}
+            fallBack="/login"
+          />
           <ProtectedRoute
             exact
             path="/home"

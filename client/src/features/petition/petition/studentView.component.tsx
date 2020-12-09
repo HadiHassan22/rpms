@@ -7,6 +7,7 @@ import { RootState } from "&store/store";
 import { petitionActions } from "./petitions.slice";
 import { getPetitionsByStudent } from "&api/petition.api";
 import { replace, goBack } from "redux-first-history";
+import { loginActions } from "&features/demo/login/login.slice";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
@@ -14,7 +15,7 @@ const { Title } = Typography;
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const StudentViewComponent = (props: ReduxProps) => {
-  const { email, petitions, reset, setPetitions, replace } = props;
+  const { email, petitions, reset, logout, setPetitions, replace } = props;
 
   useEffect(() => {
     const fetchPetitions = async () => {
@@ -85,9 +86,12 @@ const StudentViewComponent = (props: ReduxProps) => {
             {"<>RPMS"}
           </Title>
         </div>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]}>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
           <Menu.Item key="1" icon={<FileDoneOutlined />}>
             Petitions
+          </Menu.Item>
+          <Menu.Item onClick={logout} key="2">
+            Sign Out
           </Menu.Item>
         </Menu>
       </Sider>
@@ -119,6 +123,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = {
+  logout: loginActions.reset,
   reset: petitionActions.reset,
   setPetitions: petitionActions.setPetition,
   replace,

@@ -21,6 +21,8 @@ import {
   getRules,
 } from "../../../api/petition.api";
 
+import { replace } from "redux-first-history";
+
 /**
  * These are actions imported from the feature slices.
  * You can use 'useDispatch' hook or 'mapDispatchToProps'
@@ -126,16 +128,13 @@ const PetitionComponent = (props: ReduxProps) => {
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
-      sm: { span: 6 }
+      sm: { span: 6 },
     },
     wrapperCol: {
       xs: { span: 24 },
-      sm: { span: 14 }
-    }
+      sm: { span: 14 },
+    },
   };
-  
-
-
 
   return (
     <Row justify={"center"}>
@@ -163,7 +162,6 @@ const PetitionComponent = (props: ReduxProps) => {
                 maxLength={40}
                 placeholder={"Student name"}
               ></Input>
-
             </Form.Item>
             <Form.Item
               name="major"
@@ -176,20 +174,15 @@ const PetitionComponent = (props: ReduxProps) => {
                 },
               ]}
             >
-              <Input
-                minLength={3}
-                maxLength={40}
-                placeholder={"Major"}
-              ></Input>
-
+              <Input minLength={3} maxLength={40} placeholder={"Major"}></Input>
             </Form.Item>
-            
+
             <Form.Item
               name="student_id"
               rules={[
                 { required: true, message: "Please enter your student ID" },
                 {
-                  type: "string", 
+                  type: "string",
                   pattern: new RegExp("^[0-9]{9}$"),
                   message: "Please enter a valid ID",
                   //len:9
@@ -197,7 +190,7 @@ const PetitionComponent = (props: ReduxProps) => {
               ]}
             >
               <Input
-               minLength={9}
+                minLength={9}
                 maxLength={9}
                 placeholder={"Student ID Number"}
               ></Input>
@@ -243,24 +236,21 @@ const PetitionComponent = (props: ReduxProps) => {
               </Form.Item>
             ) : null}
 
-          <Form.Item
+            <Form.Item
               name="details"
               rules={[
-                      
-              {
+                {
                   type: "string",
-                        
-              },
-            ]}
-          >
-          <TextArea
-            minLength={0}
-            maxLength={150}
-            placeholder={"Ruther explain your reasons for this petition"}
-          ></TextArea>
+                },
+              ]}
+            >
+              <TextArea
+                minLength={0}
+                maxLength={150}
+                placeholder={"Ruther explain your reasons for this petition"}
+              ></TextArea>
+            </Form.Item>
 
-        </Form.Item>
-                        
             <Input
               addonBefore="Upload Transcript"
               onChange={(e: any) => handleFileChosen(e.target.files[0])}
@@ -271,11 +261,13 @@ const PetitionComponent = (props: ReduxProps) => {
               <Button type="primary" htmlType="submit" block>
                 {"Submit petition"}
               </Button>
+              <div style={{ height: 15 }}></div>
+              <Button type="default" onClick={() => replace("/student")} block>
+                {"Go back"}
+              </Button>
             </Form.Item>
           </Form>
         </Card>
-        <a href="#/chairperson">{"Go to chairperson view"}</a>
-        <Button onClick={logout}>Log out</Button>
       </Col>
     </Row>
   );

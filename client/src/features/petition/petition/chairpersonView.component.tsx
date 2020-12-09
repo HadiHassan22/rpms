@@ -16,8 +16,13 @@ import {
   Button,
   InputNumber,
 } from "antd";
-import { BookOutlined, FileDoneOutlined } from "@ant-design/icons";
 import {
+  BookOutlined,
+  FileDoneOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import {
+  deletePetition,
   getPetitions,
   getRules,
   postRule,
@@ -34,7 +39,7 @@ import { petitionActions } from "./petitions.slice";
 import { loginActions } from "&features/demo/login/login.slice";
 import { EditableCell } from "./editableCell";
 import Item from "antd/lib/list/Item";
-
+import { getUsers, updateUser } from "&api/auth.api";
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
@@ -48,15 +53,16 @@ const ChairPersonComponent = (props: ReduxProps) => {
     acceptPetition,
     rejectPetition,
     reset,
+    logout,
   } = props;
   const [visible, setVisible] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
   const [viewState, setViewState] = useState("petitions");
 
   const inputNode = <Input />;
 
   const dispatch = useDispatch();
-  
 
   interface Item {
     key: string;
@@ -64,22 +70,22 @@ const ChairPersonComponent = (props: ReduxProps) => {
     prerequisiteCourseName: string;
     prerequisiteCourseGrade: string;
   }
-  
-
-  
 
   const originData = [] as any;
   const initCourses = [] as any;
   const [ruleData, setData] = useState(originData);
   const [studentCourses, setStudentCourses] = useState(initCourses);
+  const [users, setUsers] = useState(initCourses);
 
   useEffect(() => {
     const fetchPetitions = async () => {
       try {
+        setUpdating(false);
         reset();
         const response = await getPetitions();
         setPetitions({ petitions: response.data });
         const ruleResponse = await getRules();
+        const userResponse = await getUsers();
         for (let i = 0; i < ruleResponse.data.length; i++) {
           originData.push({
             key: i.toString(),
@@ -87,12 +93,13 @@ const ChairPersonComponent = (props: ReduxProps) => {
           });
         }
         setData(originData);
+        setUsers(userResponse.data);
       } catch (e) {
         console.error(e);
       }
     };
     fetchPetitions();
-  }, [visible]);
+  }, [visible, updating]);
 
   const accept = async (id: String) => {
     const response = await updatePetition({ status: "accepted" }, id);
@@ -104,50 +111,43 @@ const ChairPersonComponent = (props: ReduxProps) => {
     rejectPetition(response.data._id);
   };
 
-
-  const columns = [
+  const columns: any = [
     {
       title: "Type",
       dataIndex: "type",
-      filters:[
+      filters: [
         {
-          text: 'capacity',
-          value: 'capacity',
+          text: "capacity",
+          value: "capacity",
         },
         {
-        text: 'co-requiste',
-        value: 'co-requiste',
+          text: "co-requiste",
+          value: "co-requiste",
         },
         {
-          text: 'restriction',
-          value: 'restriction',
+          text: "restriction",
+          value: "restriction",
         },
-
-        
-      
       ],
-    onFilter: (value, record) => record.type.indexOf(value) === 0,
-    sorter: (a, b) => a.type.length - b.type.length,
-    sortDirections: ['descend'],
+      onFilter: (value, record) => record.type.indexOf(value) === 0,
+      sorter: (a, b) => a.type.length - b.type.length,
+      sortDirections: ["descend"],
     },
     {
-      title: "Course",
+      title: "Restricted Course",
       dataIndex: "course",
-      filters: studentCourses.map((course) =>{
+      filters: studentCourses.map((course) => {
         return {
           text: course.course_name,
           value: course.course_name,
-        }
-      }
-
-      ), 
-    onFilter: (value, record) => record.course.indexOf(value) === 0,
-    sorter: (a, b) => a.course.length - b.course.length,
-    sortDirections: ['descend'],
-      
+        };
+      }),
+      onFilter: (value, record) => record.course.indexOf(value) === 0,
+      sorter: (a, b) => a.course.length - b.course.length,
+      sortDirections: ["descend"],
     },
     {
-      title: "Course",
+      title: "Co-Requisite",
       dataIndex: "course2",
     },
     {
@@ -170,30 +170,48 @@ const ChairPersonComponent = (props: ReduxProps) => {
       dataIndex: "requirements",
       render: (record: any) => {
         return record.requirements === "unmet" ? (
-          <Tag color={"error"}>Not met</Tag>
+          <Tag color={"error"}>Unsatisfied</Tag>
         ) : (
-          <Tag color={"success"}>Met</Tag>
+          <Tag color={"success"}>Satisfied</Tag>
         );
       },
     },
     {
-      title: "Action",
-      key: "action",
+      title: "Note",
+      key: "note",
       render: (record: any) => (
         <Space size="middle">
-          <a onClick={() => accept(record._id)}>Accept </a>
-          <a onClick={() => reject(record._id)} style={{ color: "red" }}>
-            Reject
-          </a>
+          <a onClick={() => {}}>Add Note </a>
         </Space>
       ),
     },
+    {
+      title: "Action",
+      key: "action",
+      render: (record: any) =>
+        record.status === "pending" ? (
+          <Space size="middle">
+            <a onClick={() => accept(record._id)}>Accept </a>
+            <a onClick={() => reject(record._id)} style={{ color: "red" }}>
+              Reject
+            </a>
+          </Space>
+        ) : (
+          <Space size="middle">
+            <a
+              onClick={() => {
+                deletePetition(record._id);
+                setUpdating(true);
+              }}
+              style={{ color: "red" }}
+            >
+              Remove
+            </a>
+          </Space>
+        ),
+    },
   ];
-  
 
-  
-
-  
   const ruleColumns = [
     {
       title: "Course Name",
@@ -237,8 +255,6 @@ const ChairPersonComponent = (props: ReduxProps) => {
       },
     },
   ];
-  
-  
 
   const onCreate = async (values) => {
     postRule(values);
@@ -259,10 +275,10 @@ const ChairPersonComponent = (props: ReduxProps) => {
     setEditingKey("");
   };
 
- const data = petitions.map((petition) => ({
-  key: petition._id,
-  ...petition
-}));
+  const data = petitions.map((petition) => ({
+    key: petition._id,
+    ...petition,
+  }));
 
   const save = async (key: React.Key) => {
     try {
@@ -317,6 +333,66 @@ const ChairPersonComponent = (props: ReduxProps) => {
     }),
   };
 
+  const userColumns = [
+    {
+      title: "name",
+      dataIndex: "name",
+    },
+    {
+      title: "E-mail",
+      dataIndex: "email",
+    },
+    {
+      title: "Admin",
+      render: (record: any) => {
+        return record.admin ? (
+          <Tag color={"error"}>Admin</Tag>
+        ) : (
+          <Tag color={"blue"}>Student</Tag>
+        );
+      },
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (record: any) => (
+        <Space size="middle">
+          {record.admin ? (
+            <a
+              onClick={() => {
+                console.log(record.admin);
+                unAdmin(record._id);
+                setVisible(false);
+              }}
+            >
+              Revoke Admin
+            </a>
+          ) : (
+            <a
+              onClick={() => {
+                console.log(record.admin);
+                makeAdmin(record._id);
+                setVisible(false);
+              }}
+            >
+              Make Admin
+            </a>
+          )}
+        </Space>
+      ),
+    },
+  ];
+
+  const makeAdmin = async (id: String) => {
+    const response = await updateUser(id, { admin: true });
+    setUpdating(true);
+  };
+
+  const unAdmin = async (id: String) => {
+    const response = await updateUser(id, { admin: false });
+    setUpdating(true);
+  };
+
   return (
     <Layout style={{ height: "100vh" }}>
       <Sider
@@ -342,7 +418,7 @@ const ChairPersonComponent = (props: ReduxProps) => {
             {"<>RPMS"}
           </Title>
         </div>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]}>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
           <Menu.Item
             key="1"
             onClick={() => setViewState("petitions")}
@@ -357,6 +433,20 @@ const ChairPersonComponent = (props: ReduxProps) => {
           >
             Courses
           </Menu.Item>
+          <Menu.Item
+            key="3"
+            onClick={() => {
+              console.log(users);
+              setViewState("users");
+            }}
+            icon={<UserOutlined />}
+          >
+            Users
+          </Menu.Item>
+
+          <Menu.Item key="4" onClick={logout}>
+            Sign Out
+          </Menu.Item>
         </Menu>
       </Sider>
 
@@ -368,7 +458,7 @@ const ChairPersonComponent = (props: ReduxProps) => {
               columns={columns}
               dataSource={data}
             />
-          ) : (
+          ) : viewState === "courses" ? (
             <div>
               <Button
                 type="primary"
@@ -440,11 +530,10 @@ const ChairPersonComponent = (props: ReduxProps) => {
                 </Form>
               </Modal>
             </div>
+          ) : (
+            <Table columns={userColumns} dataSource={users} />
           )}
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          <a href="#/login">{"Go to student view"}</a>
-        </Footer>
       </Layout>
     </Layout>
   );
@@ -465,6 +554,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = {
   // map your actions here ex:
   // increment : counterActions.increment
+  logout: loginActions.reset,
   reset: petitionActions.reset,
   setPetitions: petitionActions.setPetition,
   acceptPetition: petitionActions.acceptPetition,

@@ -16,7 +16,7 @@ import { loginActions } from "./login.slice";
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const LoginComponent = (props: ReduxProps) => {
-  const { logIn, isLoggedIn, push } = props;
+  const { logIn, isLoggedIn, admin, push } = props;
 
   /**
    * i18n translation function.
@@ -33,7 +33,8 @@ const LoginComponent = (props: ReduxProps) => {
   useEffect(() => {
     // Write your side-effects here
     if (isLoggedIn) {
-      push("/home");
+      alert(admin);
+      admin ? push("/chairperson") : push("/student");
     }
   }, [isLoggedIn, push]);
 
@@ -55,11 +56,6 @@ const LoginComponent = (props: ReduxProps) => {
               name="email"
               rules={[
                 { required: true, message: t("REQUIRED_EMAIL") },
-                {pattern: new RegExp("([a-zA-Z0-9_\\-\\.]+)@((?<![\w\d])mail(?![\w\d]))\.((?<![\w\d])aub(?![\w\d]))\.((?<![\w\d])edu(?![\w\d])|(?<![\w\d])lb(?![\w\d]))"), 
-                message: "please enter a valid university email",
-                },
-                
-                
                 { type: "email" },
               ]}
             >
@@ -112,6 +108,7 @@ const LoginComponent = (props: ReduxProps) => {
 const mapStateToProps = (state: RootState) => ({
   // Map your redux state to your props here
   isLoggedIn: state.login.isLoggedIn,
+  admin: state.login.admin,
 });
 
 /**

@@ -16,7 +16,7 @@ import { loginActions } from "./login.slice";
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const RegisterComponent = (props: ReduxProps) => {
-  const { register, isLoggedIn, push } = props;
+  const { register, isLoggedIn, admin, push } = props;
 
   /**
    * i18n translation function.
@@ -33,7 +33,7 @@ const RegisterComponent = (props: ReduxProps) => {
   useEffect(() => {
     // Write your side-effects here
     if (isLoggedIn) {
-      push("/home");
+      push("/student");
     }
   }, [isLoggedIn, push]);
 
@@ -62,6 +62,12 @@ const RegisterComponent = (props: ReduxProps) => {
               rules={[
                 { required: true, message: t("REQUIRED_EMAIL") },
                 { type: "email", message: t("VALID_EMAIL") },
+                {
+                  pattern: new RegExp(
+                    "([a-zA-Z0-9_\\-\\.]+)@((?<![wd])mail(?![wd])).((?<![wd])aub(?![wd])).((?<![wd])edu(?![wd])|(?<![wd])lb(?![wd]))"
+                  ),
+                  message: "please enter a valid university email",
+                },
               ]}
             >
               <Input
@@ -130,6 +136,7 @@ const RegisterComponent = (props: ReduxProps) => {
 const mapStateToProps = (state: RootState) => ({
   // Map your redux state to your props here
   isLoggedIn: state.login.isLoggedIn,
+  admin: state.login.admin,
 });
 
 /**
