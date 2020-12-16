@@ -83,5 +83,5 @@
     "serve": "^11.3.2",
     "wait-on": "^5.2.0"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://api-299.herokuapp.com"
 }
