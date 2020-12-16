@@ -13,8 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const apis = require("./api");
 app.use("/api", apis);
 
-mongoose
-  .connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
+
+mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log(err));
 

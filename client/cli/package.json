@@ -1,0 +1,13 @@
+{
+  "name": "cli",
+  "version": "0.0.1",
+  "description": "cli tool for the react redux ts template",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cli-color": "^2.0.0",
+    "inquirer": "^7.3.2"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "styledPath": "../src/styled/",
+  "featurePath": "../src/features/",
+  "styledComponentExt": ".styled.tsx",
+  "styledCSSExt": ".styled.css",
+  "componentExt": ".component.tsx",
+  "component": ".component",
+  "sliceExt": ".slice.ts",
+  "slice": ".slice",
+  "typeExt": ".type.ts",
+  "i18nExt": ".i18n.ts",
+  "type": ".type",
+  "args": {
+    "name": {
+      "name": "name",
+      "description": "Name of the generated file.",
+      "arg": "--name <filename>",
+      "alias": "-n <filename>",
+      "optional": false,
+      "example": "-n mainMenu"
+    },
+    "type": {
+      "name": "type",
+      "description": "File type (styled or feature)",
+      "arg": "--type",
+      "alias": "-t",
+      "optional": true,
+      "default": "styled",
+      "option[0]": "s | styled",
+      "option[1]": "f | feature",
+      "example": "-t f"
+    },
+    "next": {
+      "name": "next",
+      "description": "Proceed or exit",
+      "arg": "--next",
+      "alias": "-n",
+      "optional": true,
+      "default": "yes",
+      "option[0]": "y | yes",
+      "option[1]": "n | n",
+      "example": "-n y"
+    },
+    "path": {
+      "name": "path",
+      "description": "Path of the generated file.",
+      "arg": "--path",
+      "alias": "-p",
+      "optional": true,
+      "example": "-p features/counter",
+      "styledDefault": "src/styled/",
+      "featureDefault": "src/features/"
+    },
+    "help": {
+      "name": "help",
+      "description": "display help message",
+      "arg": "--help",
+      "alias": "-h",
+      "optional": true
+    }
+  }
+}

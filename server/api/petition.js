@@ -1,20 +1,25 @@
+const { response } = require("express");
 const PETITION = require("../../src/models/Petition");
 
 class Petition {
-  savePetitionDataToMongo = async (number, data) => {
-    const filter = {
-      number: number,
-    };
-
-    const replace = {
-      ...filter,
-      ...data,
-    };
-    await this.findOneReplace(filter, replace);
+  savePetition = async (data) => {
+    return PETITION.create(data);
   };
 
-  getPetitionDataFromMongo = async (number) => {
-    return PETITION.findOne({ number: number });
+  getPetitions = async () => {
+    return PETITION.find({}, (err, petitions) => petitions);
+  };
+
+  getPetitionsByStudent = async (email) => {
+    return PETITION.find({ email: email }, (err, petitions) => petitions);
+  };
+
+  updatePetitionById = async (id, data) => {
+    return PETITION.findByIdAndUpdate(id, data);
+  };
+
+  removePetitionById = async (id) => {
+    return PETITION.findByIdAndRemove(id);
   };
 
   async findOneReplace(filter, replace) {
