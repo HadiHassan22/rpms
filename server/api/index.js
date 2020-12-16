@@ -141,6 +141,11 @@ router.get("/petition", async (req, res) => {
   let petition = new Petition();
   let response = await petition.getPetitions();
   res.header("Content-Type", "application/json");
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   res.send(JSON.stringify(response, null, 4));
 });
 
