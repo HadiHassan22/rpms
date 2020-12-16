@@ -167,21 +167,25 @@ const ChairPersonComponent = (props: ReduxProps) => {
     {
       title: "Requirements",
       key: "requirements",
-      dataIndex: "requirements",
-      render: (record: any) => {
-        return record.requirements === "unmet" ? (
-          <Tag color={"error"}>Unsatisfied</Tag>
+      render: (record: any) =>
+        record.requirements === "met" ? (
+          <Tag color="success">Satisfied</Tag>
         ) : (
-          <Tag color={"success"}>Satisfied</Tag>
-        );
-      },
+          <Tag color="error">Unsatisfied</Tag>
+        ),
     },
     {
       title: "Note",
       key: "note",
       render: (record: any) => (
         <Space size="middle">
-          <a onClick={() => {}}>Add Note </a>
+          <a
+            onClick={() => {
+              alert(record.requirements);
+            }}
+          >
+            Add Note{" "}
+          </a>
         </Space>
       ),
     },
@@ -457,6 +461,7 @@ const ChairPersonComponent = (props: ReduxProps) => {
               rowSelection={{ type: "checkbox", ...rowSelection }}
               columns={columns}
               dataSource={data}
+              sortDirections={["ascend"]}
             />
           ) : viewState === "courses" ? (
             <div>

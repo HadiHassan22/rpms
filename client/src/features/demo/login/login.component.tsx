@@ -33,7 +33,6 @@ const LoginComponent = (props: ReduxProps) => {
   useEffect(() => {
     // Write your side-effects here
     if (isLoggedIn) {
-      alert(admin);
       admin ? push("/chairperson") : push("/student");
     }
   }, [isLoggedIn, push]);

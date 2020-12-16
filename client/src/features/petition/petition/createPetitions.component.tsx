@@ -62,13 +62,16 @@ const PetitionComponent = (props: ReduxProps) => {
   const handleSubmit = async (values: any) => {
     const course = values.course;
     const courseRules = courses.filter((value) => value.course_name === course);
-    const requirementsMet = courseRules.every((rule) => (rule) =>
-      parseInt(
-        studentGrades.find((grade) => {
-          return grade.course_name === rule.prerequisiteCourseName;
-        })?.grade ?? "0"
-      ) >= parseInt(rule.prerequisiteCourseGrade)
-    );
+    const requirementsMet = courseRules.every((rule) => {
+      alert(rule.prerequisiteCourseName + " " + rule.prerequisiteCourseGrade);
+      return (
+        parseInt(
+          grades.find(
+            (grade) => grade.course_name === rule.prerequisiteCourseName
+          )?.grade ?? "0"
+        ) >= parseInt(rule.prerequisiteCourseGrade)
+      );
+    });
 
     await createStudentGrades({
       student_id: values.student_id,
