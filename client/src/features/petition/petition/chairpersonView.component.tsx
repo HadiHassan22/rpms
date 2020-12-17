@@ -1,27 +1,26 @@
-import { getUsers, updateUser } from "&api/auth.api";
-import { loginActions } from "&features/demo/login/login.slice";
-import { RootState } from "&store/store";
+import React, { useEffect, useState } from "react";
+import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
+import {
+  Badge,
+  Form,
+  Input,
+  Layout,
+  Menu,
+  Popconfirm,
+  Radio,
+  Space,
+  Table,
+  Tag,
+  Modal,
+  Typography,
+  Button,
+  InputNumber,
+} from "antd";
 import {
   BookOutlined,
   FileDoneOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import {
-  Badge,
-  Button,
-  Form,
-  Input,
-  Layout,
-  Menu,
-  Modal,
-  Popconfirm,
-  Space,
-  Table,
-  Tag,
-  Typography,
-} from "antd";
-import React, { useEffect, useState } from "react";
-import { connect, ConnectedProps, useDispatch } from "react-redux";
 import {
   deletePetition,
   getPetitions,
@@ -29,13 +28,18 @@ import {
   postRule,
   updatePetition,
 } from "../../../api/petition.api";
-import { EditableCell } from "./editableCell";
+
+import { RootState } from "&store/store";
 /**
  * These are actions imported from the feature slices.
  * You can use 'useDispatch' hook or 'mapDispatchToProps'
  * to dispatch these actions
  */
 import { petitionActions } from "./petitions.slice";
+import { loginActions } from "&features/demo/login/login.slice";
+import { EditableCell } from "./editableCell";
+import Item from "antd/lib/list/Item";
+import { getUsers, updateUser } from "&api/auth.api";
 
 type ReduxProps = ConnectedProps<typeof connector>;
 

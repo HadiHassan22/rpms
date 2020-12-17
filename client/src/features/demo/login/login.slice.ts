@@ -1,5 +1,7 @@
 import { login, register } from "&api/auth.api";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { act } from "react-dom/test-utils";
+
 import { Login } from "./login.type";
 
 /**
