@@ -1,35 +1,21 @@
+import { loginActions } from "&features/demo/login/login.slice";
+import { RootState } from "&store/store";
+import { Button, Card, Col, Divider, Form, Input, Row, Select } from "antd";
+import { Option } from "antd/lib/mentions";
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import {
-  Button,
-  Form,
-  Card,
-  Col,
-  Row,
-  Select,
-  Input,
-  Space,
-  Divider,
-} from "antd";
-import { Option } from "antd/lib/mentions";
-
-import { RootState } from "&store/store";
-import { loginActions } from "&features/demo/login/login.slice";
+import { replace } from "redux-first-history";
 import {
   createPetition,
   createStudentGrades,
   getRules,
 } from "../../../api/petition.api";
-
-import { replace } from "redux-first-history";
-
 /**
  * These are actions imported from the feature slices.
  * You can use 'useDispatch' hook or 'mapDispatchToProps'
  * to dispatch these actions
  */
 import { petitionActions } from "./petitions.slice";
-import { number } from "yup";
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
@@ -101,7 +87,7 @@ const PetitionComponent = (props: ReduxProps) => {
 
     for (var i = 0; i < rows.length; i++) {
       var row = rows[i];
-      if (row.getElementsByTagName("td").length == 9) {
+      if (row.getElementsByTagName("td").length === 9) {
         courses.push(row.getElementsByTagName("td"));
       }
     }

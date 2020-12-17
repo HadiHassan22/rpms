@@ -1,23 +1,18 @@
-import React, { useEffect } from "react";
-import { Router, Route, Switch, Redirect } from "react-router";
-import { connect, ConnectedProps, Provider } from "react-redux";
-import { RootState } from "&store/store";
-import { Button, Row, ConfigProvider } from "antd";
-import { useTranslation } from "react-i18next";
-import { History } from "history";
-
-import "./App.css";
-import "antd/dist/antd.css";
-import { ProtectedRoute } from "&route/protectedRoute";
-
-// TODO remove demo routes
-import { HomeComponent } from "&features/demo/home/home.component";
-import { LandingComponent } from "&features/demo/landing/landing.component";
 import { LoginComponent } from "&features/demo/login/login.component";
-import { PetitionComponent } from "&features/petition/petition/createPetitions.component";
-import { ChairPersonComponent } from "&features/petition/petition/chairpersonView.component";
 import { RegisterComponent } from "&features/demo/login/register.component";
+import { ChairPersonComponent } from "&features/petition/petition/chairpersonView.component";
+import { PetitionComponent } from "&features/petition/petition/createPetitions.component";
 import { StudentViewComponent } from "&features/petition/petition/studentView.component";
+import { ProtectedRoute } from "&route/protectedRoute";
+import { RootState } from "&store/store";
+import { ConfigProvider } from "antd";
+import "antd/dist/antd.css";
+import { History } from "history";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { connect, ConnectedProps } from "react-redux";
+import { Redirect, Route, Router, Switch } from "react-router";
+import "./App.css";
 
 type ReduxProps = ConnectedProps<typeof connector>;
 type AppProps = {
