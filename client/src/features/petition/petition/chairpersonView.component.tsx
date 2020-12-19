@@ -113,6 +113,12 @@ const ChairPersonComponent = (props: ReduxProps) => {
 
   const columns: any = [
     {
+      title: "Student Name",
+      dataIndex: "student_name",
+      sorter: (a, b) => a.student_name - b.student_name,
+      sortDirections: ["descend"],
+    },
+    {
       title: "Type",
       dataIndex: "type",
       filters: [
@@ -181,7 +187,7 @@ const ChairPersonComponent = (props: ReduxProps) => {
         <Space size="middle">
           <a
             onClick={() => {
-              alert(record.requirements);
+              alert(record.description);
             }}
           >
             Add Note{" "}
@@ -279,10 +285,12 @@ const ChairPersonComponent = (props: ReduxProps) => {
     setEditingKey("");
   };
 
-  const data = petitions.map((petition) => ({
-    key: petition._id,
-    ...petition,
-  }));
+  const data = petitions
+    .map((petition) => ({
+      key: petition._id,
+      ...petition,
+    }))
+    .reverse();
 
   const save = async (key: React.Key) => {
     try {
@@ -458,6 +466,9 @@ const ChairPersonComponent = (props: ReduxProps) => {
         <Content style={{ margin: "24px 16px 0" }}>
           {viewState === "petitions" ? (
             <Table
+              expandable={{
+                expandedRowRender: (record) => <p>{record.description}</p>,
+              }}
               rowSelection={{ type: "checkbox", ...rowSelection }}
               columns={columns}
               dataSource={data}

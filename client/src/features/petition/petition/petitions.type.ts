@@ -20,4 +20,10 @@ interface Petition {
   requirements?: string;
 
   note?: string;
+
+  description: string;
+
+  student_name: string;
+
+  student_id: string;
 }

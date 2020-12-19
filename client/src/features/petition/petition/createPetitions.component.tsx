@@ -63,13 +63,14 @@ const PetitionComponent = (props: ReduxProps) => {
     const course = values.course;
     const courseRules = courses.filter((value) => value.course_name === course);
     const requirementsMet = courseRules.every((rule) => {
-      alert(rule.prerequisiteCourseName + " " + rule.prerequisiteCourseGrade);
+      const attemptedCourse = grades
+        .reverse()
+        .find((grade) => grade.course_name === rule.prerequisiteCourseName);
+      const attemptedCourseName = attemptedCourse?.course_name;
+      const attemptedCourseGrade = attemptedCourse?.grade;
       return (
-        parseInt(
-          grades.find(
-            (grade) => grade.course_name === rule.prerequisiteCourseName
-          )?.grade ?? "0"
-        ) >= parseInt(rule.prerequisiteCourseGrade)
+        parseInt(attemptedCourseGrade ?? "0") >=
+        parseInt(rule.prerequisiteCourseGrade)
       );
     });
 
@@ -240,7 +241,7 @@ const PetitionComponent = (props: ReduxProps) => {
             ) : null}
 
             <Form.Item
-              name="details"
+              name="description"
               rules={[
                 {
                   type: "string",
@@ -250,7 +251,7 @@ const PetitionComponent = (props: ReduxProps) => {
               <TextArea
                 minLength={0}
                 maxLength={150}
-                placeholder={"Ruther explain your reasons for this petition"}
+                placeholder={"Further explain your reasons for this petition"}
               ></TextArea>
             </Form.Item>
 
