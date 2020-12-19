@@ -56,6 +56,10 @@ const StudentViewComponent = (props: ReduxProps) => {
         }
       },
     },
+    {
+      title: "Note",
+      dataIndex: "note",
+    },
   ];
 
   const data = petitions;
