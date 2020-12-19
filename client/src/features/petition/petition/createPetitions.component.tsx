@@ -20,7 +20,7 @@ import { petitionActions } from "./petitions.slice";
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const PetitionComponent = (props: ReduxProps) => {
-  const { logout, addPetition, email, replace } = props;
+  const { logout, addPetition, email, replace, petitions } = props;
 
   const initialCoursesState = [] as any[];
 
