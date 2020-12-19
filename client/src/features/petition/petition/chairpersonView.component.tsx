@@ -24,6 +24,8 @@ import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps, useDispatch } from "react-redux";
 import {
   deletePetition,
+  deleteRule,
+  editRule,
   getPetitions,
   getRules,
   postRule,
