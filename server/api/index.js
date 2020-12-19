@@ -56,6 +56,16 @@ router.get("/rules", async (req, res) => {
   res.send(JSON.stringify(response, null, 4));
 });
 
+//edit rule
+router.post("/rules/edit/:id", async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  let response = await Prerequisites.findByIdAndUpdate(id, data);
+  console.log(response);
+  res.header("Content-Type", "application/json");
+  res.send(JSON.stringify(response, null, 4));
+});
+
 // delete rule
 router.get("/rules/remove/:id", async (req, res) => {
   const id = req.params.id;

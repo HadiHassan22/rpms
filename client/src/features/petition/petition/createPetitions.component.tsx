@@ -220,11 +220,19 @@ const PetitionComponent = (props: ReduxProps) => {
               rules={[{ required: true, message: "Please enter course" }]}
             >
               <Select defaultValue="Course" style={{ width: "50%" }}>
-                {courses.map((course) => (
-                  <Option value={course.course_name}>
-                    {course.course_name}
-                  </Option>
-                ))}
+                {courses
+                  .sort((a, b) =>
+                    a.course_name > b.course_name
+                      ? 1
+                      : b.course_name > a.course_name
+                      ? -1
+                      : 0
+                  )
+                  .map((course) => (
+                    <Option value={course.course_name}>
+                      {course.course_name}
+                    </Option>
+                  ))}
               </Select>
             </Form.Item>
 
@@ -234,8 +242,19 @@ const PetitionComponent = (props: ReduxProps) => {
                 rules={[{ required: true, message: "Please enter course" }]}
               >
                 <Select defaultValue="Course" style={{ width: "50%" }}>
-                  <Option value="cmps272">CMPS 272</Option>
-                  <Option value="cmps255">CMPS 255</Option>
+                  {courses
+                    .sort((a, b) =>
+                      a.course_name > b.course_name
+                        ? 1
+                        : b.course_name > a.course_name
+                        ? -1
+                        : 0
+                    )
+                    .map((course) => (
+                      <Option value={course.course_name}>
+                        {course.course_name}
+                      </Option>
+                    ))}
                 </Select>
               </Form.Item>
             ) : null}

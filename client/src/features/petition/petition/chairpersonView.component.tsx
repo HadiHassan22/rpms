@@ -23,6 +23,8 @@ import {
 } from "@ant-design/icons";
 import {
   deletePetition,
+  deleteRule,
+  editRule,
   getPetitions,
   getRules,
   postRule,
@@ -71,8 +73,9 @@ const ChairPersonComponent = (props: ReduxProps) => {
     prerequisiteCourseGrade: string;
   }
 
-  const originData = [] as any;
-  const initCourses = [] as any;
+  const originData = [] as any[];
+  const initCourses = [] as any[];
+  const [selectedIds, setSelectedIds] = useState(initCourses);
   const [ruleData, setData] = useState(originData);
   const [studentCourses, setStudentCourses] = useState(initCourses);
   const [users, setUsers] = useState(initCourses);
@@ -88,11 +91,19 @@ const ChairPersonComponent = (props: ReduxProps) => {
         const userResponse = await getUsers();
         for (let i = 0; i < ruleResponse.data.length; i++) {
           originData.push({
-            key: i.toString(),
+            key: ruleResponse.data[i]._id,
             ...ruleResponse.data[i],
           });
         }
-        setData(originData);
+        setData(
+          originData.sort((a, b) =>
+            a.course_name > b.course_name
+              ? 1
+              : b.course_name > a.course_name
+              ? -1
+              : 0
+          )
+        );
         setUsers(userResponse.data);
       } catch (e) {
         console.error(e);
@@ -102,20 +113,36 @@ const ChairPersonComponent = (props: ReduxProps) => {
   }, [visible, updating]);
 
   const accept = async (id: String) => {
-    const response = await updatePetition({ status: "accepted" }, id);
-    acceptPetition(response.data._id);
+    selectedIds.length === 0
+      ? acceptPetition(id)
+      : selectedIds.forEach(async (element) => {
+          const response = await updatePetition(
+            { status: "accepted" },
+            element
+          );
+          acceptPetition(element);
+        });
   };
 
   const reject = async (id: String) => {
-    const response = await updatePetition({ status: "rejected" }, id);
-    rejectPetition(response.data._id);
+    selectedIds.length === 0
+      ? rejectPetition(id)
+      : selectedIds.forEach(async (element) => {
+          const response = await updatePetition({ status: "rejected" }, id);
+          rejectPetition(id);
+        });
   };
 
   const columns: any = [
     {
       title: "Student Name",
       dataIndex: "student_name",
-      sorter: (a, b) => a.student_name - b.student_name,
+      sorter: (a, b) =>
+        a.student_name > b.student_name
+          ? 1
+          : b.student_name > a.student_name
+          ? -1
+          : 0,
       sortDirections: ["descend"],
     },
     {
@@ -187,7 +214,7 @@ const ChairPersonComponent = (props: ReduxProps) => {
         <Space size="middle">
           <a
             onClick={() => {
-              alert(record.description);
+              alert(record._id);
             }}
           >
             Add Note{" "}
@@ -210,7 +237,11 @@ const ChairPersonComponent = (props: ReduxProps) => {
           <Space size="middle">
             <a
               onClick={() => {
-                deletePetition(record._id);
+                selectedIds.length === 0
+                  ? deletePetition(record._id)
+                  : selectedIds.forEach(async (element) => {
+                      deletePetition(element);
+                    });
                 setUpdating(true);
               }}
               style={{ color: "red" }}
@@ -228,6 +259,12 @@ const ChairPersonComponent = (props: ReduxProps) => {
       dataIndex: "course_name",
       width: "20%",
       editable: true,
+      sorter: (a, b) =>
+        a.course_name > b.course_name
+          ? 1
+          : b.course_name > a.course_name
+          ? -1
+          : 0,
     },
     {
       title: "Prerequisite Course",
@@ -250,7 +287,7 @@ const ChairPersonComponent = (props: ReduxProps) => {
           <span>
             <a
               href="javascript:;"
-              onClick={() => save(record.key)}
+              onClick={() => save(record.key, record.key)}
               style={{ marginRight: 8 }}
             >
               Save
@@ -260,7 +297,12 @@ const ChairPersonComponent = (props: ReduxProps) => {
             </Popconfirm>
           </span>
         ) : (
-          <a onClick={() => edit(record)}>Edit</a>
+          <Space size="middle">
+            <a onClick={() => edit(record)}>Edit</a>
+            <a style={{ color: "red" }} onClick={() => remove(record.key)}>
+              Remove
+            </a>
+          </Space>
         );
       },
     },
@@ -292,7 +334,17 @@ const ChairPersonComponent = (props: ReduxProps) => {
     }))
     .reverse();
 
-  const save = async (key: React.Key) => {
+  const remove = (id: string) => {
+    deleteRule(id);
+    const newData = [...ruleData];
+    const index = newData.findIndex((item) => id === item.key);
+    if (index > -1) {
+      newData.splice(index, 1);
+    }
+    setData(newData);
+  };
+
+  const save = async (key: React.Key, id: String) => {
     try {
       const row = (await form.validateFields()) as Item;
 
@@ -307,6 +359,7 @@ const ChairPersonComponent = (props: ReduxProps) => {
         setData(newData);
         setEditingKey("");
       } else {
+        editRule(id, row);
         newData.push(row);
         setData(newData);
         setEditingKey("");
@@ -334,11 +387,7 @@ const ChairPersonComponent = (props: ReduxProps) => {
 
   const rowSelection = {
     onChange: (selectedRowKeys: any, selectedRows: any) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
+      setSelectedIds(selectedRowKeys);
     },
     getCheckboxProps: (record: any) => ({
       name: record.name,
