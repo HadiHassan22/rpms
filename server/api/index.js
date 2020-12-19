@@ -41,12 +41,7 @@ router.use(bodyParser.json());
 //post rule
 router.post("/rules", async (req, res) => {
   let ruleData = req.body;
-  let courseName = req.body.course_name;
-  const response = await Prerequisites.findOneAndUpdate(
-    { course_name: courseName },
-    ruleData,
-    { upsert: true, new: true }
-  );
+  const response = await Prerequisites.create(ruleData);
   res.send(response);
 });
 
@@ -57,6 +52,24 @@ router.get("/rules", async (req, res) => {
     {},
     (err, prerequisites) => prerequisites
   );
+  res.header("Content-Type", "application/json");
+  res.send(JSON.stringify(response, null, 4));
+});
+
+//edit rule
+router.post("/rules/edit/:id", async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  let response = await Prerequisites.findByIdAndUpdate(id, data);
+  console.log(response);
+  res.header("Content-Type", "application/json");
+  res.send(JSON.stringify(response, null, 4));
+});
+
+// delete rule
+router.get("/rules/remove/:id", async (req, res) => {
+  const id = req.params.id;
+  response = await Prerequisites.findByIdAndRemove(id);
   res.header("Content-Type", "application/json");
   res.send(JSON.stringify(response, null, 4));
 });
@@ -96,7 +109,14 @@ router.post("/add-course", (req, res) => {
 router.post("/petition", async (req, res) => {
   let petition = new Petition();
   let petitionData = req.body;
-  let response = await petition.savePetition(petitionData);
+  let response = await petition.findOneReplace(
+    {
+      student_id: petitionData.student_id,
+      type: petitionData.type,
+      course: petitionData.course,
+    },
+    petitionData
+  );
   console.log(petitionData);
   res.header("Content-Type", "application/json");
   res.send(response);
@@ -141,11 +161,6 @@ router.get("/petition", async (req, res) => {
   let petition = new Petition();
   let response = await petition.getPetitions();
   res.header("Content-Type", "application/json");
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
   res.send(JSON.stringify(response, null, 4));
 });
 
