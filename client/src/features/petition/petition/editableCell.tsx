@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { Table, Input, InputNumber, Popconfirm, Form } from "antd";
-import { getRules } from "&api/petition.api";
+import { Form, Input, InputNumber } from "antd";
+import React from "react";
 
 interface Item {
   key: string;

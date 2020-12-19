@@ -1,6 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import Axios from "axios";
-
+import { createSlice } from "@reduxjs/toolkit";
 import { Petitions } from "./petitions.type";
 
 /**
