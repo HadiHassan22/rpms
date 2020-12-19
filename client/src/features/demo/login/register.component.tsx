@@ -1,10 +1,11 @@
-import { RootState } from "&store/store";
-import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, Row } from "antd";
 import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { connect, ConnectedProps } from "react-redux";
+import { Input, Button, Form, Card, Checkbox, Col, Row } from "antd";
+import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { push } from "redux-first-history";
+import { useTranslation } from "react-i18next";
+
+import { RootState } from "&store/store";
 /**
  * These are actions imported from the feature slices.
  * You can use 'useDispatch' hook or 'mapDispatchToProps'

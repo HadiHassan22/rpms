@@ -1,12 +1,13 @@
-import { getPetitionsByStudent } from "&api/petition.api";
-import { loginActions } from "&features/demo/login/login.slice";
-import { RootState } from "&store/store";
-import { FileDoneOutlined } from "@ant-design/icons";
-import { Badge, Button, Layout, Menu, Table, Typography } from "antd";
+import { Layout, Table, Typography, Menu, Badge, Button } from "antd";
+import { BookOutlined, FileDoneOutlined } from "@ant-design/icons";
+
 import React, { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { goBack, replace } from "redux-first-history";
+import { RootState } from "&store/store";
 import { petitionActions } from "./petitions.slice";
+import { getPetitionsByStudent } from "&api/petition.api";
+import { replace, goBack } from "redux-first-history";
+import { loginActions } from "&features/demo/login/login.slice";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
@@ -55,6 +56,10 @@ const StudentViewComponent = (props: ReduxProps) => {
             return <Badge status="processing" text={status} />;
         }
       },
+    },
+    {
+      title: "Note",
+      dataIndex: "note",
     },
   ];
 

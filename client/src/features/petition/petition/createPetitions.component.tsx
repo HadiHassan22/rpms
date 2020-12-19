@@ -1,26 +1,40 @@
-import { loginActions } from "&features/demo/login/login.slice";
-import { RootState } from "&store/store";
-import { Button, Card, Col, Divider, Form, Input, Row, Select } from "antd";
-import { Option } from "antd/lib/mentions";
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { replace } from "redux-first-history";
+import {
+  Button,
+  Form,
+  Card,
+  Col,
+  Row,
+  Select,
+  Input,
+  Space,
+  Divider,
+} from "antd";
+import { Option } from "antd/lib/mentions";
+
+import { RootState } from "&store/store";
+import { loginActions } from "&features/demo/login/login.slice";
 import {
   createPetition,
   createStudentGrades,
   getRules,
 } from "../../../api/petition.api";
+
+import { replace } from "redux-first-history";
+
 /**
  * These are actions imported from the feature slices.
  * You can use 'useDispatch' hook or 'mapDispatchToProps'
  * to dispatch these actions
  */
 import { petitionActions } from "./petitions.slice";
+import { number } from "yup";
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const PetitionComponent = (props: ReduxProps) => {
-  const { logout, addPetition, email, replace } = props;
+  const { logout, addPetition, email, replace, petitions } = props;
 
   const initialCoursesState = [] as any[];
 
@@ -47,31 +61,46 @@ const PetitionComponent = (props: ReduxProps) => {
 
   const handleSubmit = async (values: any) => {
     const course = values.course;
-    const courseRules = courses.filter((value) => value.course_name === course);
-    const requirementsMet = courseRules.every((rule) => {
-      alert(rule.prerequisiteCourseName + " " + rule.prerequisiteCourseGrade);
-      return (
-        parseInt(
-          grades.find(
-            (grade) => grade.course_name === rule.prerequisiteCourseName
-          )?.grade ?? "0"
-        ) >= parseInt(rule.prerequisiteCourseGrade)
+    const type = values.type;
+    if (
+      petitions.petitions.filter(
+        (petition) =>
+          petition.course === course &&
+          petition.student_id === values.student_id &&
+          petition.type === type
+      ).length > 0
+    ) {
+      alert("You cannot create a duplicate petition");
+    } else {
+      const courseRules = courses.filter(
+        (value) => value.course_name === course
       );
-    });
+      const requirementsMet = courseRules.every((rule) => {
+        const attemptedCourse = grades
+          .reverse()
+          .find((grade) => grade.course_name === rule.prerequisiteCourseName);
+        const attemptedCourseName = attemptedCourse?.course_name;
+        const attemptedCourseGrade = attemptedCourse?.grade;
+        return (
+          parseInt(attemptedCourseGrade ?? "0") >=
+          parseInt(rule.prerequisiteCourseGrade)
+        );
+      });
 
-    await createStudentGrades({
-      student_id: values.student_id,
-      courses: grades,
-    });
-    await storePetition({
-      ...values,
-      ...{
-        status: "pending",
-        email: email,
-        requirements: requirementsMet ? "met" : "unmet",
-      },
-    });
-    replace("/student");
+      await createStudentGrades({
+        student_id: values.student_id,
+        courses: grades,
+      });
+      await storePetition({
+        ...values,
+        ...{
+          status: "pending",
+          email: email,
+          requirements: requirementsMet ? "met" : "unmet",
+        },
+      });
+      replace("/student");
+    }
   };
 
   let fileReader: FileReader;
@@ -87,7 +116,7 @@ const PetitionComponent = (props: ReduxProps) => {
 
     for (var i = 0; i < rows.length; i++) {
       var row = rows[i];
-      if (row.getElementsByTagName("td").length === 9) {
+      if (row.getElementsByTagName("td").length == 9) {
         courses.push(row.getElementsByTagName("td"));
       }
     }
@@ -205,11 +234,19 @@ const PetitionComponent = (props: ReduxProps) => {
               rules={[{ required: true, message: "Please enter course" }]}
             >
               <Select defaultValue="Course" style={{ width: "50%" }}>
-                {courses.map((course) => (
-                  <Option value={course.course_name}>
-                    {course.course_name}
-                  </Option>
-                ))}
+                {courses
+                  .sort((a, b) =>
+                    a.course_name > b.course_name
+                      ? 1
+                      : b.course_name > a.course_name
+                      ? -1
+                      : 0
+                  )
+                  .map((course) => (
+                    <Option value={course.course_name}>
+                      {course.course_name}
+                    </Option>
+                  ))}
               </Select>
             </Form.Item>
 
@@ -219,14 +256,25 @@ const PetitionComponent = (props: ReduxProps) => {
                 rules={[{ required: true, message: "Please enter course" }]}
               >
                 <Select defaultValue="Course" style={{ width: "50%" }}>
-                  <Option value="cmps272">CMPS 272</Option>
-                  <Option value="cmps255">CMPS 255</Option>
+                  {courses
+                    .sort((a, b) =>
+                      a.course_name > b.course_name
+                        ? 1
+                        : b.course_name > a.course_name
+                        ? -1
+                        : 0
+                    )
+                    .map((course) => (
+                      <Option value={course.course_name}>
+                        {course.course_name}
+                      </Option>
+                    ))}
                 </Select>
               </Form.Item>
             ) : null}
 
             <Form.Item
-              name="details"
+              name="description"
               rules={[
                 {
                   type: "string",
@@ -236,7 +284,7 @@ const PetitionComponent = (props: ReduxProps) => {
               <TextArea
                 minLength={0}
                 maxLength={150}
-                placeholder={"Ruther explain your reasons for this petition"}
+                placeholder={"Further explain your reasons for this petition"}
               ></TextArea>
             </Form.Item>
 
