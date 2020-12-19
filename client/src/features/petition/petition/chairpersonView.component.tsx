@@ -146,6 +146,10 @@ const ChairPersonComponent = (props: ReduxProps) => {
       sortDirections: ["descend"],
     },
     {
+      title: "Student ID",
+      dataIndex: "student_id",
+    },
+    {
       title: "Type",
       dataIndex: "type",
       filters: [
@@ -214,7 +218,8 @@ const ChairPersonComponent = (props: ReduxProps) => {
         <Space size="middle">
           <a
             onClick={() => {
-              alert(record._id);
+              const note = prompt("Enter note");
+              updatePetition({ note: note }, record._id);
             }}
           >
             Add Note{" "}

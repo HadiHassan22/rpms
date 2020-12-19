@@ -34,7 +34,7 @@ import { number } from "yup";
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const PetitionComponent = (props: ReduxProps) => {
-  const { logout, addPetition, email, replace } = props;
+  const { logout, addPetition, email, replace, petitions } = props;
 
   const initialCoursesState = [] as any[];
 
@@ -61,32 +61,46 @@ const PetitionComponent = (props: ReduxProps) => {
 
   const handleSubmit = async (values: any) => {
     const course = values.course;
-    const courseRules = courses.filter((value) => value.course_name === course);
-    const requirementsMet = courseRules.every((rule) => {
-      const attemptedCourse = grades
-        .reverse()
-        .find((grade) => grade.course_name === rule.prerequisiteCourseName);
-      const attemptedCourseName = attemptedCourse?.course_name;
-      const attemptedCourseGrade = attemptedCourse?.grade;
-      return (
-        parseInt(attemptedCourseGrade ?? "0") >=
-        parseInt(rule.prerequisiteCourseGrade)
+    const type = values.type;
+    if (
+      petitions.petitions.filter(
+        (petition) =>
+          petition.course === course &&
+          petition.student_id === values.student_id &&
+          petition.type === type
+      ).length > 0
+    ) {
+      alert("You cannot create a duplicate petition");
+    } else {
+      const courseRules = courses.filter(
+        (value) => value.course_name === course
       );
-    });
+      const requirementsMet = courseRules.every((rule) => {
+        const attemptedCourse = grades
+          .reverse()
+          .find((grade) => grade.course_name === rule.prerequisiteCourseName);
+        const attemptedCourseName = attemptedCourse?.course_name;
+        const attemptedCourseGrade = attemptedCourse?.grade;
+        return (
+          parseInt(attemptedCourseGrade ?? "0") >=
+          parseInt(rule.prerequisiteCourseGrade)
+        );
+      });
 
-    await createStudentGrades({
-      student_id: values.student_id,
-      courses: grades,
-    });
-    await storePetition({
-      ...values,
-      ...{
-        status: "pending",
-        email: email,
-        requirements: requirementsMet ? "met" : "unmet",
-      },
-    });
-    replace("/student");
+      await createStudentGrades({
+        student_id: values.student_id,
+        courses: grades,
+      });
+      await storePetition({
+        ...values,
+        ...{
+          status: "pending",
+          email: email,
+          requirements: requirementsMet ? "met" : "unmet",
+        },
+      });
+      replace("/student");
+    }
   };
 
   let fileReader: FileReader;
